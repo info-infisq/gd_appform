@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BitByte Technologies — Graphic Designer Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════ */
+:root {
+  --brand:        #4F6EF7;
+  --brand-dark:   #3451D1;
+  --brand-mid:    #7B96FF;
+  --brand-light:  #EEF1FF;
+  --accent:       #00C2A8;
+  --accent-glow:  rgba(0,194,168,.25);
+  --gold:         #F0A500;
+  --navy:         #0B0F1E;
+  --navy-2:       #111827;
+  --navy-3:       #1A2035;
+  --navy-4:       #232B45;
+  --navy-5:       #2D3756;
+  --slate:        #8B99B5;
+  --slate-light:  #C5CEDF;
+  --white:        #FFFFFF;
+  --off-white:    #F4F6FC;
+  --success:      #10B981;
+  --error:        #F43F5E;
+  --radius:       16px;
+  --radius-sm:    10px;
+  --radius-xs:    6px;
+  --transition:   all .25s cubic-bezier(.16,1,.3,1);
+}
+
+/* ═══════════════════════════════════════════════
+   LIGHT MODE
+═══════════════════════════════════════════════ */
+body.light-mode {
+  --navy:       #F0F4FF;
+  --navy-2:     #E4EAFF;
+  --navy-3:     #FFFFFF;
+  --navy-4:     #EEF1FF;
+  --navy-5:     #E0E7FF;
+  --slate:      #5A6282;
+  --slate-light:#374165;
+  --white:      #1A1F3C;
+  --off-white:  #1A1F3C;
+}
+body.light-mode::before {
+  background:
+    radial-gradient(ellipse 70% 55% at 8% 5%,  rgba(79,110,247,.10) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 92% 95%, rgba(0,194,168,.07) 0%, transparent 50%),
+    #F0F4FF;
+}
+body.light-mode .site-header { background: rgba(240,244,255,.92); box-shadow: 0 1px 0 rgba(79,110,247,.1), 0 4px 32px rgba(79,110,247,.08); }
+body.light-mode .progress-wrap { background: rgba(228,234,255,.95); }
+body.light-mode .step-num { background: rgba(238,241,255,.9); border-color: rgba(79,110,247,.25); color: var(--slate); }
+body.light-mode .step-connector { background: rgba(79,110,247,.15); }
+body.light-mode .step-connector.filled { background: linear-gradient(90deg, var(--success), var(--accent)); }
+body.light-mode .card { background: rgba(255,255,255,.88); border-color: rgba(79,110,247,.14); box-shadow: 0 4px 24px rgba(79,110,247,.07), 0 1px 0 rgba(255,255,255,.9) inset; }
+body.light-mode .card:hover { border-color: rgba(79,110,247,.32); box-shadow: 0 8px 40px rgba(79,110,247,.12), 0 1px 0 rgba(255,255,255,.9) inset; }
+body.light-mode .jd-card { background: rgba(255,255,255,.92); border-color: rgba(79,110,247,.18); }
+body.light-mode .field input, body.light-mode .field select, body.light-mode .field textarea { background: rgba(255,255,255,.95); border-color: rgba(79,110,247,.22); color: #1A1F3C; }
+body.light-mode .field label { color: #374165; }
+body.light-mode .field input::placeholder, body.light-mode .field textarea::placeholder { color: rgba(90,98,130,.45); }
+body.light-mode .field input:focus, body.light-mode .field select:focus, body.light-mode .field textarea:focus { background: rgba(238,241,255,.8); border-color: var(--brand); }
+body.light-mode .field select option { background: #fff; color: #1A1F3C; }
+body.light-mode .check-item { background: rgba(255,255,255,.8); border-color: rgba(79,110,247,.2); color: var(--slate); }
+body.light-mode .check-item:hover { background: rgba(238,241,255,.9); border-color: rgba(79,110,247,.5); color: #1A1F3C; }
+body.light-mode .check-item.checked { background: rgba(79,110,247,.12); border-color: var(--brand); color: #1A1F3C; }
+body.light-mode .repeat-row { background: rgba(238,241,255,.5); border-color: rgba(79,110,247,.14); }
+body.light-mode .proficiency-table th { background: rgba(79,110,247,.1); }
+body.light-mode .proficiency-table td { border-color: rgba(79,110,247,.1); color: #374165; }
+body.light-mode .proficiency-table td:first-child { color: #1A1F3C; }
+body.light-mode .proficiency-table tr:nth-child(even) td { background: rgba(79,110,247,.04); }
+body.light-mode .proficiency-table tr:hover td { background: rgba(79,110,247,.08); }
+body.light-mode .jd-chip { background: rgba(238,241,255,.8); border-color: rgba(79,110,247,.2); color: var(--slate); }
+body.light-mode .jd-chip span { color: #1A1F3C; }
+body.light-mode .jd-role { color: #1A1F3C; }
+body.light-mode .jd-list li { color: #374165; }
+body.light-mode .btn-ghost { background: rgba(238,241,255,.8); border-color: rgba(79,110,247,.25); color: var(--slate); }
+body.light-mode .btn-ghost:hover { background: rgba(79,110,247,.15); color: #1A1F3C; }
+body.light-mode .print-btn { background: rgba(238,241,255,.95); border-color: rgba(79,110,247,.35); color: var(--brand); }
+body.light-mode .success-screen h2 { color: #1A1F3C; }
+body.light-mode .section-title h2 { color: #1A1F3C; }
+body.light-mode .section-icon { background: rgba(238,241,255,.9); border-color: rgba(79,110,247,.25); }
+body.light-mode .divider { background: rgba(79,110,247,.1); }
+body.light-mode .nav-bar { border-top-color: rgba(79,110,247,.1); }
+body.light-mode .hint { color: var(--slate); }
+body.light-mode .card-title { color: var(--brand); }
+body.light-mode .char-counter { color: var(--slate); }
+body.light-mode .other-tool-level select { background: rgba(255,255,255,.95); color: #1A1F3C; }
+body.light-mode .float-label label { color: var(--slate); }
+body.light-mode .float-label input:focus ~ label,
+body.light-mode .float-label input:not(:placeholder-shown) ~ label { color: var(--brand); background: #fff; }
+
+/* ═══════════════════════════════════════════════
+   THEME TRANSITION OVERLAY
+═══════════════════════════════════════════════ */
+.theme-transition-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: rgba(79,110,247,.15);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.theme-transition-overlay.flash { opacity: 1; }
+
+/* ═══════════════════════════════════════════════
+   BASE RESET & TYPOGRAPHY
+═══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--navy);
+  color: var(--off-white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  transition: background .35s ease, color .35s ease;
+  font-feature-settings: "kern" 1;
+}
+
+/* ═══════════════════════════════════════════════
+   ANIMATED BACKGROUND MESH (SLOW LIVING GRADIENT)
+═══════════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 8% 5%,  rgba(79,110,247,.2) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 92% 95%, rgba(0,194,168,.15) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(79,110,247,.07) 0%, transparent 70%),
+    var(--navy);
+  animation: meshDrift 28s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes meshDrift {
+  0%   { background-position: 0% 0%, 100% 100%, 50% 50%; }
+  50%  { background-position: 12% 8%, 88% 92%, 55% 45%; }
+  100% { background-position: 5% 15%, 95% 85%, 48% 52%; }
+}
+
+/* Noise grain overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  pointer-events: none;
+  opacity: .6;
+}
+
+/* Grid overlay */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(79,110,247,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,110,247,.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 75%);
+}
+
+/* ═══════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════ */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(11,15,30,.88);
+  backdrop-filter: blur(28px) saturate(200%);
+  border-bottom: 1px solid rgba(79,110,247,.18);
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 68px;
+  box-shadow: 0 1px 0 rgba(79,110,247,.12), 0 4px 40px rgba(11,15,30,.55);
+  transition: background .35s, box-shadow .35s;
+}
+.logo {
+  display: flex; align-items: center; gap: 13px;
+  font-family: 'Outfit', sans-serif; font-weight: 800;
+  color: var(--white); letter-spacing: -.3px;
+}
+.logo-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 28px rgba(79,110,247,.55), 0 0 60px rgba(79,110,247,.2), inset 0 1px 0 rgba(255,255,255,.25);
+  position: relative; flex-shrink: 0; overflow: hidden;
+  transition: box-shadow .3s;
+}
+.logo-icon:hover { box-shadow: 0 0 40px rgba(79,110,247,.7), 0 0 80px rgba(79,110,247,.3), inset 0 1px 0 rgba(255,255,255,.25); }
+.logo-icon svg { position: relative; z-index: 1; }
+.logo-wordmark { display: flex; flex-direction: column; gap: 0; }
+.logo-wordmark .logo-name { color: var(--white); font-size: 1.12rem; font-weight: 800; line-height: 1.15; letter-spacing: -.3px; }
+.logo-wordmark .logo-sub { color: var(--brand-mid); font-size: .6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.2; }
+.logo-dot { color: var(--brand-mid); }
+.header-right { display: flex; align-items: center; gap: 14px; }
+.header-badge {
+  font-size: .7rem; color: var(--brand-mid);
+  background: rgba(79,110,247,.12);
+  border: 1px solid rgba(79,110,247,.28);
+  padding: 5px 14px; border-radius: 20px;
+  font-family: 'Outfit', sans-serif; font-weight: 700; letter-spacing: .4px;
+}
+.header-live {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .7rem; color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 700;
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  50%       { box-shadow: 0 0 0 6px transparent; }
+}
+
+/* ═══════════════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════════════ */
+.theme-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+.theme-toggle-track {
+  width: 46px; height: 25px; border-radius: 13px;
+  background: rgba(79,110,247,.22);
+  border: 1.5px solid rgba(79,110,247,.32);
+  position: relative; transition: all .35s;
+  flex-shrink: 0;
+}
+body.light-mode .theme-toggle-track { background: rgba(79,110,247,.18); border-color: rgba(79,110,247,.38); }
+.theme-toggle-thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 19px; height: 19px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-mid), var(--brand));
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 2px 10px rgba(79,110,247,.5);
+}
+body.light-mode .theme-toggle-thumb { transform: translateX(21px); background: linear-gradient(135deg, #F0A500, #FFD166); box-shadow: 0 2px 10px rgba(240,165,0,.5); }
+.theme-icon { font-size: .78rem; transition: opacity .2s; }
+
+/* ═══════════════════════════════════════════════
+   PROGRESS BAR — WITH CONNECTOR LINES
+═══════════════════════════════════════════════ */
+.progress-wrap {
+  position: sticky; top: 68px; z-index: 99;
+  background: rgba(17,24,39,.92);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(79,110,247,.12);
+}
+.progress-wrap::before {
+  content: '';
+  display: block; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--brand), var(--accent), var(--brand-mid), transparent);
+  opacity: .55;
+}
+.progress-steps {
+  display: flex; gap: 0; overflow-x: auto;
+  scrollbar-width: none; padding: 0 16px;
+  align-items: center;
+}
+.progress-steps::-webkit-scrollbar { display: none; }
+.step-tab {
+  flex: 1; min-width: 84px;
+  padding: 13px 8px 11px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  cursor: pointer; border: none; background: transparent;
+  font-family: 'Outfit', sans-serif;
+  transition: var(--transition);
+  position: relative;
+}
+.step-tab::after {
+  content: ''; position: absolute; bottom: 0; left: 15%; right: 15%;
+  height: 2px; background: transparent; border-radius: 2px 2px 0 0;
+  transition: all .3s;
+}
+.step-tab.active::after {
+  background: linear-gradient(90deg, var(--brand), var(--brand-mid));
+  box-shadow: 0 0 12px rgba(79,110,247,.7);
+}
+.step-tab.done::after { background: var(--success); box-shadow: 0 0 8px rgba(16,185,129,.4); }
+.step-num {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1.5px solid rgba(139,153,181,.28);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .68rem; font-weight: 700; color: var(--slate);
+  transition: all .3s; background: rgba(26,32,53,.85);
+  position: relative; z-index: 1;
+}
+.step-tab.active .step-num {
+  background: var(--brand); border-color: var(--brand-mid);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(79,110,247,.65), 0 0 40px rgba(79,110,247,.3);
+  transform: scale(1.1);
+}
+.step-tab.done .step-num {
+  background: var(--success); border-color: var(--success); color: #fff;
+  box-shadow: 0 0 16px rgba(16,185,129,.5);
+}
+.step-label {
+  font-size: .6rem; color: var(--slate); white-space: nowrap;
+  font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+  transition: color .25s;
+}
+.step-tab.active .step-label { color: var(--brand-mid); }
+.step-tab.done  .step-label  { color: var(--success); }
+/* Connector line between steps */
+.step-connector {
+  flex: 0 0 16px; height: 2px;
+  background: rgba(139,153,181,.18);
+  border-radius: 2px;
+  transition: background .4s;
+}
+.step-connector.filled { background: linear-gradient(90deg, var(--success), rgba(16,185,129,.4)); }
+
+/* ═══════════════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════════════ */
+.main {
+  position: relative; z-index: 1;
+  max-width: 880px; margin: 0 auto;
+  padding: 48px 24px 120px;
+}
+
+/* ═══════════════════════════════════════════════
+   STEP SECTIONS — STAGGERED CARD ENTRY
+═══════════════════════════════════════════════ */
+.form-section { display: none; }
+.form-section.active { display: block; }
+.form-section.active .section-title { animation: fadeUp .45s cubic-bezier(.16,1,.3,1) both; }
+.form-section.active .card:nth-child(1) { animation: fadeUp .45s .06s cubic-bezier(.16,1,.3,1) both; }
+.form-section.active .card:nth-child(2) { animation: fadeUp .45s .12s cubic-bezier(.16,1,.3,1) both; }
+.form-section.active .card:nth-child(3) { animation: fadeUp .45s .18s cubic-bezier(.16,1,.3,1) both; }
+.form-section.active .card:nth-child(4) { animation: fadeUp .45s .24s cubic-bezier(.16,1,.3,1) both; }
+.form-section.active .jd-card          { animation: fadeUp .45s .06s cubic-bezier(.16,1,.3,1) both; }
+.form-section.active .nav-bar          { animation: fadeUp .45s .28s cubic-bezier(.16,1,.3,1) both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════
+   SECTION TITLE
+═══════════════════════════════════════════════ */
+.section-title {
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: 38px;
+}
+.section-icon {
+  width: 54px; height: 54px; border-radius: 15px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--navy-4), var(--navy-5));
+  border: 1px solid rgba(79,110,247,.28);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 24px rgba(79,110,247,.2), inset 0 1px 0 rgba(255,255,255,.07);
+  transition: transform .2s, box-shadow .2s;
+}
+.section-icon:hover { transform: scale(1.04); box-shadow: 0 8px 32px rgba(79,110,247,.3), inset 0 1px 0 rgba(255,255,255,.07); }
+.section-title h2 {
+  font-family: 'Fraunces', serif; font-size: 1.7rem; font-weight: 900;
+  color: var(--white); letter-spacing: -.5px; line-height: 1.18;
+}
+.section-title p {
+  font-size: .82rem; color: var(--slate); margin-top: 5px; font-weight: 500; line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════
+   CARDS — TIERED ELEVATION
+═══════════════════════════════════════════════ */
+.card {
+  background: rgba(26,32,53,.72);
+  border: 1px solid rgba(79,110,247,.14);
+  border-radius: var(--radius);
+  padding: 30px 32px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(18px);
+  transition: border-color .28s, box-shadow .28s, transform .28s;
+  box-shadow:
+    0 4px 28px rgba(11,15,30,.42),
+    inset 0 1px 0 rgba(255,255,255,.055);
+  position: relative; overflow: hidden;
+  will-change: transform;
+}
+/* Top shimmer line */
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(79,110,247,.5) 40%, rgba(0,194,168,.4) 60%, transparent 100%);
+}
+/* Card hover shimmer sweep */
+.card::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+  transition: left .7s ease;
+  pointer-events: none;
+}
+.card:hover { border-color: rgba(79,110,247,.3); box-shadow: 0 10px 48px rgba(11,15,30,.5), 0 0 0 1px rgba(79,110,247,.07), inset 0 1px 0 rgba(255,255,255,.06); transform: translateY(-1px); }
+.card:hover::after { left: 150%; }
+
+/* Primary card (1st child in a section) — slightly elevated */
+.card:first-of-type {
+  box-shadow: 0 6px 36px rgba(11,15,30,.48), inset 0 1px 0 rgba(255,255,255,.07);
+  border-color: rgba(79,110,247,.18);
+}
+
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: .7rem; font-weight: 800; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--brand-mid);
+  margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+}
+.card-title::before {
+  content: ''; width: 3px; height: 18px; border-radius: 2px;
+  background: linear-gradient(180deg, var(--brand), var(--accent)); flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   FLOATING LABEL FIELDS
+═══════════════════════════════════════════════ */
+.field-group { display: grid; gap: 16px; margin-bottom: 16px; }
+.field-group.cols-2 { grid-template-columns: 1fr 1fr; }
+.field-group.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label {
+  font-size: .71rem; font-weight: 700; color: var(--slate-light);
+  letter-spacing: .7px; text-transform: uppercase;
+  font-family: 'Outfit', sans-serif;
+  transition: color .2s;
+}
+.field label .req { color: var(--error); margin-left: 3px; }
+
+/* Float label wrapper */
+.float-label {
+  position: relative;
+}
+.float-label input,
+.float-label textarea {
+  padding-top: 18px; padding-bottom: 8px;
+}
+.float-label label {
+  position: absolute; top: 12px; left: 16px;
+  font-size: .88rem; font-weight: 500; letter-spacing: 0; text-transform: none;
+  color: rgba(139,153,181,.6);
+  pointer-events: none;
+  transition: all .2s cubic-bezier(.16,1,.3,1);
+  background: transparent;
+  padding: 0 4px;
+}
+.float-label input:focus ~ label,
+.float-label input:not(:placeholder-shown) ~ label,
+.float-label textarea:focus ~ label,
+.float-label textarea:not(:placeholder-shown) ~ label {
+  top: 5px; font-size: .6rem; font-weight: 700;
+  letter-spacing: .7px; text-transform: uppercase;
+  color: var(--brand-mid);
+  background: rgba(11,15,30,.85);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  background: rgba(11,15,30,.62);
+  border: 1.5px solid rgba(79,110,247,.17);
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .9rem;
+  padding: 12px 16px;
+  transition: border-color .22s, background .22s, box-shadow .22s;
+  outline: none; width: 100%;
+  font-feature-settings: "tnum";
+  will-change: border-color, box-shadow;
+}
+/* Left accent bar on focus */
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--brand);
+  background: rgba(79,110,247,.08);
+  box-shadow: 0 0 0 3px rgba(79,110,247,.16), 0 4px 20px rgba(79,110,247,.1), -3px 0 0 0 var(--brand);
+}
+.field input::placeholder, .field textarea::placeholder { color: rgba(139,153,181,.45); }
+.field input.error, .field select.error, .field textarea.error {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(244,63,94,.14);
+}
+.field textarea { resize: vertical; min-height: 100px; }
+.field select {
+  cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B99B5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px;
+}
+.field select option { background: var(--navy-3); color: var(--white); }
+.error-msg { font-size: .7rem; color: var(--error); display: none; margin-top: 3px; }
+.error-msg.show { display: block; }
+
+/* ═══════════════════════════════════════════════
+   CHARACTER COUNTER
+═══════════════════════════════════════════════ */
+.char-counter {
+  font-size: .7rem; color: var(--slate); text-align: right; margin-top: 5px;
+  font-family: 'Outfit', sans-serif; font-weight: 600;
+  transition: color .2s, transform .15s;
+  font-variant-numeric: tabular-nums;
+}
+.char-counter.below { color: var(--slate); }
+.char-counter.near  { color: var(--brand-mid); }
+.char-counter.good  { color: var(--accent); }
+.char-counter.bump  { animation: countBump .15s ease both; }
+@keyframes countBump { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+
+/* ═══════════════════════════════════════════════
+   CHECK / RADIO ITEMS
+═══════════════════════════════════════════════ */
+.check-group { display: flex; flex-wrap: wrap; gap: 10px; }
+.check-item {
+  display: flex; align-items: center; gap: 9px;
+  cursor: pointer; padding: 8px 16px;
+  border-radius: var(--radius-xs);
+  border: 1.5px solid rgba(79,110,247,.17);
+  background: rgba(11,15,30,.52);
+  transition: all .2s; user-select: none;
+  font-size: .84rem; color: var(--slate);
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500;
+}
+.check-item:hover { border-color: rgba(79,110,247,.45); color: var(--white); background: rgba(79,110,247,.1); transform: translateY(-1px); }
+.check-item input[type="checkbox"], .check-item input[type="radio"] {
+  width: 16px; height: 16px; accent-color: var(--brand);
+  cursor: pointer; flex-shrink: 0; margin: 0; padding: 0; border: none; background: transparent;
+}
+.check-item.checked {
+  border-color: var(--brand); background: rgba(79,110,247,.14);
+  color: var(--white); box-shadow: 0 0 16px rgba(79,110,247,.18);
+}
+
+/* ═══════════════════════════════════════════════
+   SOFTWARE PROFICIENCY TABLE
+═══════════════════════════════════════════════ */
+.proficiency-table { width: 100%; border-collapse: collapse; }
+.proficiency-table th {
+  background: rgba(79,110,247,.13);
+  color: var(--brand-mid);
+  font-family: 'Outfit', sans-serif; font-size: .66rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+  padding: 12px 12px; text-align: center;
+  border: 1px solid rgba(79,110,247,.14);
+}
+.proficiency-table th:first-child { text-align: left; }
+.proficiency-table td {
+  padding: 10px 12px; border: 1px solid rgba(79,110,247,.08);
+  text-align: center; font-size: .84rem; color: var(--slate);
+  transition: background .15s;
+}
+.proficiency-table td:first-child { text-align: left; color: var(--off-white); font-weight: 600; }
+.proficiency-table tr:nth-child(even) td { background: rgba(79,110,247,.03); }
+.proficiency-table tr:hover td { background: rgba(79,110,247,.08); }
+.proficiency-table input[type="radio"] { width: 16px; height: 16px; accent-color: var(--brand); cursor: pointer; }
+
+/* ═══════════════════════════════════════════════
+   REPEATING ROWS
+═══════════════════════════════════════════════ */
+.repeat-row {
+  background: rgba(11,15,30,.52);
+  border: 1px solid rgba(79,110,247,.11);
+  border-radius: 11px; padding: 20px;
+  margin-bottom: 12px; position: relative;
+  transition: border-color .2s, box-shadow .2s;
+}
+.repeat-row:hover { border-color: rgba(79,110,247,.22); box-shadow: 0 4px 20px rgba(11,15,30,.3); }
+.repeat-row .remove-btn {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.22);
+  color: var(--error); border-radius: 6px; width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: .85rem; transition: all .2s;
+}
+.repeat-row .remove-btn:hover { background: rgba(244,63,94,.22); transform: scale(1.08); }
+.add-row-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: transparent; border: 1.5px dashed rgba(79,110,247,.28);
+  color: var(--brand-mid); border-radius: 11px;
+  padding: 12px 18px; cursor: pointer; font-size: .84rem;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+  transition: all .22s; width: 100%; justify-content: center; margin-top: 4px;
+}
+.add-row-btn:hover { border-color: var(--brand); background: rgba(79,110,247,.09); color: var(--white); transform: translateY(-1px); }
+
+/* ═══════════════════════════════════════════════
+   JOB DESCRIPTION CARD — HERO TREATMENT
+═══════════════════════════════════════════════ */
+.jd-card {
+  background: rgba(26,32,53,.82);
+  border: 1px solid rgba(79,110,247,.2);
+  border-radius: var(--radius); padding: 40px; margin-bottom: 24px;
+  box-shadow: 0 10px 50px rgba(11,15,30,.5), inset 0 1px 0 rgba(255,255,255,.05);
+  position: relative; overflow: hidden;
+}
+.jd-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--brand), var(--accent), var(--brand-mid), var(--brand));
+  background-size: 200% 100%;
+  animation: gradSlide 4s linear infinite;
+}
+@keyframes gradSlide {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+/* Circuit trace decoration */
+.jd-card::after {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 280px; height: 280px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' fill='none'%3E%3Cpath d='M40 0 L40 40 L80 40 L80 80 M80 40 L140 40 L140 0 M140 40 L180 40 L180 80 L240 80 L240 40 M180 80 L180 140 L240 140 M40 80 L40 140 L80 140 L80 180 L140 180 L140 140 L180 140' stroke='rgba(79,110,247,0.07)' stroke-width='1.5' stroke-linecap='round'/%3E%3Ccircle cx='40' cy='40' r='3' fill='rgba(79,110,247,0.12)'/%3E%3Ccircle cx='80' cy='80' r='3' fill='rgba(0,194,168,0.12)'/%3E%3Ccircle cx='140' cy='40' r='3' fill='rgba(79,110,247,0.12)'/%3E%3Ccircle cx='180' cy='80' r='3' fill='rgba(79,110,247,0.12)'/%3E%3Ccircle cx='240' cy='80' r='3' fill='rgba(0,194,168,0.12)'/%3E%3C/svg%3E") no-repeat;
+  pointer-events: none; opacity: .8;
+}
+.jd-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.jd-badge {
+  background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+  color: #fff; font-size: .66rem; font-weight: 800;
+  padding: 5px 14px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase;
+  font-family: 'Outfit', sans-serif; box-shadow: 0 4px 18px rgba(79,110,247,.45);
+}
+.jd-badge-accent {
+  background: rgba(0,194,168,.14); color: var(--accent);
+  border: 1px solid rgba(0,194,168,.32);
+  font-size: .66rem; font-weight: 800;
+  padding: 5px 14px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase;
+  font-family: 'Outfit', sans-serif;
+}
+.jd-role {
+  font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 900;
+  color: var(--white); letter-spacing: -.8px; line-height: 1.12;
+}
+.jd-company {
+  color: var(--slate); font-size: .9rem; margin: 6px 0 24px;
+  font-family: 'Outfit', sans-serif; font-weight: 500; letter-spacing: .3px;
+}
+.jd-company span { color: var(--brand-mid); font-weight: 700; }
+.jd-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+.jd-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(11,15,30,.62); border: 1px solid rgba(79,110,247,.18);
+  border-radius: 9px; padding: 7px 15px;
+  font-size: .78rem; color: var(--slate);
+  font-family: 'Outfit', sans-serif; font-weight: 500;
+  transition: all .2s;
+}
+.jd-chip:hover { border-color: rgba(79,110,247,.38); color: var(--off-white); transform: translateY(-1px); }
+.jd-chip span { color: var(--off-white); font-weight: 700; }
+.jd-divider { height: 1px; background: rgba(79,110,247,.12); margin: 22px 0; }
+.jd-block { margin-bottom: 24px; }
+.jd-block h4 {
+  font-family: 'Outfit', sans-serif; font-size: .7rem;
+  font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.jd-block h4::after { content: ''; flex: 1; height: 1px; background: rgba(0,194,168,.18); }
+.jd-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.jd-list li {
+  display: flex; align-items: flex-start; gap: 13px;
+  font-size: .87rem; color: var(--slate-light); line-height: 1.65;
+}
+.jd-list li::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-mid), var(--accent));
+  flex-shrink: 0; margin-top: 8px;
+  box-shadow: 0 0 8px rgba(79,110,247,.4);
+}
+
+/* ═══════════════════════════════════════════════
+   NAVIGATION BUTTONS
+═══════════════════════════════════════════════ */
+.nav-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 38px; padding-top: 28px;
+  border-top: 1px solid rgba(79,110,247,.1);
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 32px; border-radius: 11px;
+  font-family: 'Outfit', sans-serif;
+  font-size: .88rem; font-weight: 800; cursor: pointer;
+  transition: all .25s cubic-bezier(.16,1,.3,1); border: none; letter-spacing: .4px;
+  position: relative; overflow: hidden;
+  will-change: transform;
+}
+.btn::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(rgba(255,255,255,.1), transparent);
+  pointer-events: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+  color: #fff; box-shadow: 0 5px 22px rgba(79,110,247,.42);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(79,110,247,.58); }
+.btn-primary:active { transform: translateY(-1px); }
+.btn-ghost {
+  background: rgba(26,32,53,.8); color: var(--slate);
+  border: 1.5px solid rgba(79,110,247,.2);
+}
+.btn-ghost:hover { background: rgba(79,110,247,.12); color: var(--white); border-color: rgba(79,110,247,.45); transform: translateY(-2px); }
+.btn-accent {
+  background: linear-gradient(135deg, #0D9F90, var(--accent));
+  color: #fff; box-shadow: 0 5px 22px rgba(0,194,168,.42);
+}
+.btn-accent:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(0,194,168,.55); }
+
+/* ═══════════════════════════════════════════════
+   SUCCESS SCREEN — WITH CONFETTI
+═══════════════════════════════════════════════ */
+.success-screen {
+  display: none; text-align: center; padding: 80px 24px;
+  animation: fadeUp .6s cubic-bezier(.16,1,.3,1) both;
+  position: relative; overflow: hidden;
+}
+.success-screen.show { display: block; }
+.success-ring {
+  width: 108px; height: 108px; border-radius: 50%; margin: 0 auto 30px;
+  background: linear-gradient(135deg, rgba(16,185,129,.18), rgba(16,185,129,.06));
+  border: 2px solid rgba(16,185,129,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.6rem;
+  box-shadow: 0 0 0 14px rgba(16,185,129,.06), 0 0 0 28px rgba(16,185,129,.03), 0 0 60px rgba(16,185,129,.22);
+  animation: successPop .65s cubic-bezier(.34,1.56,.64,1) .15s both;
+}
+@keyframes successPop {
+  from { transform: scale(.4); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+.success-screen h2 {
+  font-family: 'Fraunces', serif; font-size: 2.4rem; font-weight: 900;
+  color: var(--white); margin-bottom: 14px; letter-spacing: -.6px;
+}
+.success-screen p { color: var(--slate); font-size: .95rem; line-height: 1.75; max-width: 480px; margin: 0 auto; }
+.ref-box {
+  display: inline-block; margin-top: 30px;
+  background: rgba(79,110,247,.1); border: 1px solid rgba(79,110,247,.3);
+  border-radius: 13px; padding: 17px 36px;
+  font-family: 'Outfit', sans-serif; font-size: 1.15rem;
+  font-weight: 900; color: var(--brand-mid); letter-spacing: 4px;
+  box-shadow: 0 0 40px rgba(79,110,247,.18);
+}
+/* Confetti particles */
+.confetti-wrap {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.confetti-piece {
+  position: absolute; width: 8px; height: 8px;
+  border-radius: 2px; opacity: 0;
+  animation: confettiFall 2.2s ease-in forwards;
+}
+@keyframes confettiFall {
+  0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(420px) rotate(720deg); }
+}
+
+/* ═══════════════════════════════════════════════
+   MISC
+═══════════════════════════════════════════════ */
+.hint { font-size: .71rem; color: var(--slate); margin-top: 5px; font-style: italic; }
+.divider { height: 1px; background: rgba(79,110,247,.1); margin: 22px 0; }
+.ctc-prefix { position: relative; }
+.ctc-prefix input { padding-left: 44px; font-variant-numeric: tabular-nums; }
+.ctc-prefix::before {
+  content: '₹'; position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  color: var(--slate); font-size: .9rem; pointer-events: none; font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.other-tool-level { display: flex; gap: 10px; align-items: flex-end; }
+.other-tool-level .field:first-child { flex: 1; }
+.other-tool-level .field:last-child { flex-shrink: 0; min-width: 155px; }
+.other-tool-level select {
+  background: rgba(11,15,30,.62);
+  border: 1.5px solid rgba(79,110,247,.17);
+  border-radius: var(--radius-sm);
+  color: var(--white); font-family: 'Plus Jakarta Sans', sans-serif; font-size: .9rem;
+  padding: 12px 38px 12px 16px; outline: none; width: 100%; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B99B5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  transition: border-color .22s, background .22s, box-shadow .22s;
+}
+.other-tool-level select:focus { border-color: var(--brand); background-color: rgba(79,110,247,.08); box-shadow: 0 0 0 3px rgba(79,110,247,.16); }
+.other-tool-level select option { background: var(--navy-3); color: var(--white); }
+
+/* ═══════════════════════════════════════════════
+   PRINT BUTTON
+═══════════════════════════════════════════════ */
+.print-btn {
+  position: fixed; bottom: 28px; right: 28px; z-index: 200;
+  background: rgba(26,32,53,.92); border: 1px solid rgba(79,110,247,.35);
+  color: var(--brand-mid); border-radius: 13px;
+  padding: 12px 22px; cursor: pointer; font-size: .8rem;
+  font-family: 'Outfit', sans-serif; font-weight: 800;
+  display: flex; align-items: center; gap: 8px;
+  backdrop-filter: blur(20px);
+  transition: all .25s; box-shadow: 0 4px 24px rgba(11,15,30,.55);
+}
+.print-btn:hover {
+  background: var(--brand); color: #fff; border-color: var(--brand-mid);
+  box-shadow: 0 8px 32px rgba(79,110,247,.5); transform: translateY(-3px);
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .field-group.cols-2, .field-group.cols-3 { grid-template-columns: 1fr; }
+  .site-header { padding: 0 16px; }
+  .header-badge { display: none; }
+  .main { padding: 28px 16px 120px; }
+  .step-label { font-size: .55rem; }
+  .proficiency-table { font-size: .74rem; }
+  .proficiency-table td, .proficiency-table th { padding: 7px 6px; }
+  .jd-role { font-size: 1.55rem; }
+  .card { padding: 22px 20px; }
+  .step-connector { flex: 0 0 8px; }
+}
+
+/* ═══════════════════════════════════════════════
+   PRINT OVERLAY
+═══════════════════════════════════════════════ */
+#printOverlay {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: #0e1117; overflow-y: auto;
+}
+#printOverlay.show { display: block; }
+#printDoc {
+  max-width: 820px; margin: 0 auto;
+  background: white; font-family: 'Plus Jakarta Sans', sans-serif; color: #111;
+  padding: 0 0 40px;
+}
+.print-toolbar {
+  position: sticky; top: 0; z-index: 10;
+  background: #0B0F1E; padding: 14px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(79,110,247,.2);
+}
+.print-toolbar span { color: #7B96FF; font-size: .84rem; font-family: 'Outfit', sans-serif; font-weight: 600; }
+.print-toolbar-btns { display: flex; gap: 10px; }
+.pt-btn { padding: 9px 20px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: .82rem; font-weight: 700; transition: all .2s; }
+.pt-btn-print { background: #4F6EF7; color: white; box-shadow: 0 4px 16px rgba(79,110,247,.4); }
+.pt-btn-print:hover { background: #7B96FF; }
+.pt-btn-close { background: rgba(255,255,255,.06); color: #8B99B5; border: 1px solid rgba(255,255,255,.1); }
+.pt-btn-close:hover { background: rgba(255,255,255,.12); color: white; }
+.pd-header { background: linear-gradient(135deg, #3451D1, #4F6EF7, #00C2A8); padding: 34px 40px 26px; color: white; }
+.pd-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.pd-logo { display: flex; align-items: center; gap: 11px; }
+.pd-logo-icon { width: 42px; height: 42px; border-radius: 10px; background: linear-gradient(135deg, #4F6EF7, #7B96FF); display: flex; align-items: center; justify-content: center; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.pd-logo-name { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 900; letter-spacing: -.2px; }
+.pd-logo-sub { font-size: .6rem; color: rgba(255,255,255,.7); letter-spacing: 1.2px; text-transform: uppercase; font-weight: 600; font-family: 'Outfit', sans-serif; }
+.pd-ref { font-size: .75rem; color: rgba(255,255,255,.7); font-family: 'Outfit', sans-serif; }
+.pd-title { font-family: 'Outfit', sans-serif; font-size: 1.7rem; font-weight: 900; margin-bottom: 4px; letter-spacing: -.4px; }
+.pd-subtitle { font-size: .9rem; color: rgba(255,255,255,.75); }
+.pd-body { padding: 0 40px; }
+.pd-section { margin-top: 28px; }
+.pd-section-title { display: flex; align-items: center; gap: 10px; font-family: 'Outfit', sans-serif; font-size: .7rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: #3451D1; margin-bottom: 14px; padding-bottom: 9px; border-bottom: 2px solid #DBEAFE; }
+.pd-section-title::before { content: ''; width: 3px; height: 14px; border-radius: 2px; background: linear-gradient(#4F6EF7, #00C2A8); flex-shrink: 0; }
+.pd-grid { display: grid; gap: 14px; margin-bottom: 14px; }
+.pd-grid.g2 { grid-template-columns: 1fr 1fr; }
+.pd-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.pd-field { display: flex; flex-direction: column; gap: 3px; }
+.pd-label { font-size: .67rem; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #888; font-family: 'Outfit', sans-serif; }
+.pd-value { font-size: .88rem; color: #111; line-height: 1.5; padding: 7px 10px; background: #f7f7fa; border: 1px solid #e5e5ed; border-radius: 6px; min-height: 34px; word-break: break-word; }
+.pd-value.tall { min-height: 70px; white-space: pre-wrap; }
+.pd-value.empty { color: #bbb; font-style: italic; }
+.pd-check-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.pd-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: .8rem; border: 1.5px solid #e5e5ed; background: #f7f7fa; color: #555; }
+.pd-chip.selected { background: #DBEAFE; border-color: #4F6EF7; color: #1D4ED8; font-weight: 700; }
+.pd-chip.selected::before { content: '✓ '; }
+.pd-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: .82rem; }
+.pd-table th { background: #4F6EF7; color: white; padding: 8px 10px; text-align: left; font-family: 'Outfit', sans-serif; font-size: .67rem; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; }
+.pd-table td { padding: 8px 10px; border: 1px solid #e5e5ed; vertical-align: top; color: #333; }
+.pd-table tr:nth-child(even) td { background: #f9f9fc; }
+.pd-divider { height: 1px; background: #eee; margin: 20px 0; }
+.pd-footer { margin: 40px 40px 0; padding: 18px; background: #f7f7fa; border: 1px solid #e5e5ed; border-radius: 9px; display: flex; justify-content: space-between; align-items: flex-end; font-size: .78rem; color: #888; font-family: 'Outfit', sans-serif; position: relative; overflow: hidden; }
+.pd-footer::before { content: 'CONFIDENTIAL — BITBYTE TECHNOLOGIES'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-20deg); font-size: 1.6rem; font-weight: 900; color: rgba(79,110,247,.05); letter-spacing: 3px; white-space: nowrap; font-family: 'Outfit', sans-serif; pointer-events: none; }
+.pd-footer-sig { font-size: .85rem; color: #333; font-weight: 700; }
+.pd-soft-table { width: 100%; border-collapse: collapse; font-size: .8rem; margin-bottom: 14px; }
+.pd-soft-table th { background: #4F6EF7; color: white; padding: 7px 8px; text-align: center; font-family: 'Outfit', sans-serif; font-size: .65rem; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; }
+.pd-soft-table th:first-child { text-align: left; }
+.pd-soft-table td { padding: 7px 8px; border: 1px solid #e5e5ed; text-align: center; color: #555; }
+.pd-soft-table td:first-child { text-align: left; color: #222; font-weight: 600; }
+.pd-soft-table tr:nth-child(even) td { background: #f9f9fc; }
+.pd-soft-table .sel-level { background: #DBEAFE; color: #3451D1; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: .72rem; }
+
+@media print {
+  body, html { margin: 0; padding: 0; }
+  .site-header, .progress-wrap, .main, .print-btn, .print-toolbar, #printOverlay { display: none !important; }
+  #printContent { display: block !important; }
+}
+</style>
+<style media="print">
+  body > *:not(#printContent) { display: none !important; }
+  #printContent { display: block !important; font-family: 'Plus Jakarta Sans', sans-serif; color: #111; }
+  #printContent .pd-header { background: #4F6EF7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; color: white !important; }
+  #printContent .pd-section-title { color: #3451D1 !important; border-bottom: 2px solid #DBEAFE !important; }
+  #printContent .pd-value { background: #f7f7fa !important; border: 1px solid #e5e5ed !important; }
+  #printContent .pd-chip.selected { background: #DBEAFE !important; color: #1D4ED8 !important; border-color: #4F6EF7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #printContent .pd-table th, #printContent .pd-soft-table th { background: #4F6EF7 !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #printContent .pd-soft-table .sel-level { background: #DBEAFE !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #printContent .pd-footer { background: #f7f7fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #printContent .print-toolbar { display: none !important; }
+  @page { margin: 10mm; size: A4; }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="theme-transition-overlay" id="themeOverlay"></div>
+
+<!-- ══ HEADER ══ -->
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="27" height="27" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="7" y="7" width="12" height="12" rx="2" fill="rgba(255,255,255,0.95)" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+        <line x1="10" y1="7" x2="10" y2="19" stroke="rgba(79,110,247,0.5)" stroke-width="0.6"/>
+        <line x1="13" y1="7" x2="13" y2="19" stroke="rgba(79,110,247,0.5)" stroke-width="0.6"/>
+        <line x1="16" y1="7" x2="16" y2="19" stroke="rgba(79,110,247,0.5)" stroke-width="0.6"/>
+        <line x1="7" y1="10" x2="19" y2="10" stroke="rgba(79,110,247,0.5)" stroke-width="0.6"/>
+        <line x1="7" y1="13" x2="19" y2="13" stroke="rgba(79,110,247,0.5)" stroke-width="0.6"/>
+        <line x1="7" y1="16" x2="19" y2="16" stroke="rgba(79,110,247,0.5)" stroke-width="0.6"/>
+        <rect x="9.5" y="3.5" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="12.25" y="3.5" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="15" y="3.5" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="9.5" y="19" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="12.25" y="19" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="15" y="19" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="3.5" y="9.5" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="3.5" y="12.25" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="3.5" y="15" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="19" y="9.5" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="19" y="12.25" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <rect x="19" y="15" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/>
+        <path d="M7 9 L9 7" stroke="rgba(0,194,168,0.85)" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="13" cy="13" r="1.8" fill="rgba(79,110,247,1)"/>
+        <circle cx="13" cy="13" r="0.7" fill="white"/>
+        <!-- Specular highlight -->
+        <circle cx="10" cy="9" r="0.5" fill="rgba(255,255,255,0.5)"/>
+      </svg>
+    </div>
+    <div class="logo-wordmark">
+      <span class="logo-name">BitByte<span class="logo-dot">.</span></span>
+      <span class="logo-sub">Technologies</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-live"><div class="live-dot"></div>Now Hiring</div>
+    <div class="header-badge">Graphic Designer · Application</div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+      <span class="theme-icon">🌙</span>
+      <div class="theme-toggle-track"><div class="theme-toggle-thumb"></div></div>
+      <span class="theme-icon">☀️</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ PROGRESS BAR ══ -->
+<div class="progress-wrap">
+  <div class="progress-steps" id="progressSteps">
+    <button class="step-tab active" onclick="goToStep(0)"><div class="step-num">1</div><div class="step-label">Job Brief</div></button>
+    <div class="step-connector" id="conn-0"></div>
+    <button class="step-tab" onclick="goToStep(1)"><div class="step-num">2</div><div class="step-label">Personal</div></button>
+    <div class="step-connector" id="conn-1"></div>
+    <button class="step-tab" onclick="goToStep(2)"><div class="step-num">3</div><div class="step-label">Education</div></button>
+    <div class="step-connector" id="conn-2"></div>
+    <button class="step-tab" onclick="goToStep(3)"><div class="step-num">4</div><div class="step-label">Experience</div></button>
+    <div class="step-connector" id="conn-3"></div>
+    <button class="step-tab" onclick="goToStep(4)"><div class="step-num">5</div><div class="step-label">Portfolio</div></button>
+    <div class="step-connector" id="conn-4"></div>
+    <button class="step-tab" onclick="goToStep(5)"><div class="step-num">6</div><div class="step-label">Software</div></button>
+    <div class="step-connector" id="conn-5"></div>
+    <button class="step-tab" onclick="goToStep(6)"><div class="step-num">7</div><div class="step-label">Employment</div></button>
+    <div class="step-connector" id="conn-6"></div>
+    <button class="step-tab" onclick="goToStep(7)"><div class="step-num">8</div><div class="step-label">References</div></button>
+    <div class="step-connector" id="conn-7"></div>
+    <button class="step-tab" onclick="goToStep(8)"><div class="step-num">9</div><div class="step-label">Cover Letter</div></button>
+  </div>
+</div>
+
+<main class="main">
+
+  <!-- ══ STEP 0 — JOB DESCRIPTION ══ -->
+  <section class="form-section active" id="step-0">
+    <div class="section-title">
+      <div class="section-icon">📋</div>
+      <div><h2>Job Description</h2><p>Read carefully before filling the application</p></div>
+    </div>
+    <div class="jd-card">
+      <div class="jd-header"><div class="jd-badge">Now Hiring</div><div class="jd-badge-accent">Full-Time</div></div>
+      <div class="jd-role">Graphic Designer</div>
+      <div class="jd-company">BitByte Technologies &nbsp;·&nbsp; <span>Creative & Innovation Team</span></div>
+      <div class="jd-meta">
+        <div class="jd-chip">📍 <span>On-site / Hybrid</span></div>
+        <div class="jd-chip">🏢 <span>Creative & Marketing</span></div>
+        <div class="jd-chip">⭐ <span>1–3 Years Exp.</span></div>
+        <div class="jd-chip">👤 Reports to <span>Creative Director</span></div>
+      </div>
+      <div class="jd-divider"></div>
+      <div class="jd-block">
+        <h4>Role Overview</h4>
+        <p style="font-size:.87rem; color:var(--slate); line-height:1.8;">We are a fast-growing tech startup looking for a talented Graphic Designer to shape our visual identity. You'll work closely with marketing, product, and leadership teams to create compelling design assets that communicate our brand story across digital and print channels.</p>
+      </div>
+      <div class="jd-block">
+        <h4>Key Responsibilities</h4>
+        <ul class="jd-list">
+          <li>Design visual content for social media, ads, presentations, pitch decks, and brand collateral.</li>
+          <li>Develop and maintain consistent brand identity across all touchpoints.</li>
+          <li>Create UI/UX wireframes and mockups in collaboration with the product team.</li>
+          <li>Produce motion graphics and short video assets for digital campaigns.</li>
+          <li>Manage multiple projects simultaneously and meet tight deadlines.</li>
+        </ul>
+      </div>
+      <div class="jd-block">
+        <h4>Required Skills</h4>
+        <ul class="jd-list">
+          <li>Proficiency in Adobe Creative Suite (Photoshop, Illustrator, InDesign) and Figma.</li>
+          <li>Strong understanding of typography, colour theory, layout, and visual hierarchy.</li>
+          <li>A compelling portfolio showcasing diverse design work.</li>
+          <li>Degree/diploma in Graphic Design or Visual Communication (preferred, not mandatory).</li>
+          <li>Excellent communication and collaborative, startup mindset.</li>
+        </ul>
+      </div>
+      <div class="jd-block">
+        <h4>Nice to Have</h4>
+        <ul class="jd-list">
+          <li>Experience with motion graphics (After Effects, Premiere Pro).</li>
+          <li>Basic knowledge of HTML/CSS for email or web design.</li>
+          <li>Prior experience in a startup or agency environment.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="nav-bar"><div></div><button class="btn btn-primary" onclick="nextStep()">Start Application →</button></div>
+  </section>
+
+  <!-- ══ STEP 1 — PERSONAL ══ -->
+  <section class="form-section" id="step-1">
+    <div class="section-title"><div class="section-icon">👤</div><div><h2>Personal Information</h2><p>Tell us about yourself</p></div></div>
+    <div class="card">
+      <div class="card-title">Basic Details</div>
+      <div class="field-group cols-2">
+        <div class="field"><label>First Name <span class="req">*</span></label><input type="text" id="firstName" placeholder="e.g. Riya" autocomplete="given-name"/><div class="error-msg" id="err-firstName">First name is required.</div></div>
+        <div class="field"><label>Last Name <span class="req">*</span></label><input type="text" id="lastName" placeholder="e.g. Sharma" autocomplete="family-name"/><div class="error-msg" id="err-lastName">Last name is required.</div></div>
+      </div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Date of Birth <span class="req">*</span></label><input type="date" id="dob" autocomplete="bday"/></div>
+        <div class="field"><label>Nationality <span class="req">*</span></label><input type="text" id="nationality" placeholder="e.g. Indian" autocomplete="country-name" list="nationality-list"/>
+          <datalist id="nationality-list"><option value="Indian"/><option value="American"/><option value="British"/><option value="Canadian"/><option value="Australian"/><option value="German"/><option value="Singaporean"/></datalist></div>
+      </div>
+      <div class="field"><label>Gender</label>
+        <div class="check-group" id="gender-group">
+          <label class="check-item"><input type="radio" name="gender" value="Male"/> Male</label>
+          <label class="check-item"><input type="radio" name="gender" value="Female"/> Female</label>
+          <label class="check-item"><input type="radio" name="gender" value="Non-Binary"/> Non-Binary</label>
+          <label class="check-item"><input type="radio" name="gender" value="Prefer Not to Say"/> Prefer Not to Say</label>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Contact Details</div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Phone Number <span class="req">*</span></label><input type="tel" id="phone" placeholder="+91 98765 43210" autocomplete="tel"/><div class="error-msg" id="err-phone">Phone number is required.</div></div>
+        <div class="field"><label>Alternate Phone</label><input type="tel" id="altPhone" placeholder="+91 98765 43210" autocomplete="tel"/></div>
+      </div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Email Address <span class="req">*</span></label><input type="email" id="email" placeholder="you@example.com" autocomplete="email"/><div class="error-msg" id="err-email">Valid email is required.</div></div>
+        <div class="field"><label>LinkedIn Profile URL</label><input type="url" id="linkedin" placeholder="https://linkedin.com/in/yourname" autocomplete="url"/></div>
+      </div>
+      <div class="field"><label>Current Address <span class="req">*</span></label><textarea id="address" placeholder="Street address, area..." rows="2" autocomplete="street-address"></textarea></div>
+      <div class="field-group cols-3">
+        <div class="field"><label>City <span class="req">*</span></label><input type="text" id="city" placeholder="Chennai" autocomplete="address-level2" list="city-list"/>
+          <datalist id="city-list"><option value="Chennai"/><option value="Mumbai"/><option value="Bangalore"/><option value="Hyderabad"/><option value="Delhi"/><option value="Pune"/><option value="Kolkata"/></datalist></div>
+        <div class="field"><label>State</label><input type="text" id="state" placeholder="Tamil Nadu" autocomplete="address-level1" list="state-list"/>
+          <datalist id="state-list"><option value="Tamil Nadu"/><option value="Maharashtra"/><option value="Karnataka"/><option value="Telangana"/><option value="Delhi"/><option value="Gujarat"/><option value="Kerala"/></datalist></div>
+        <div class="field"><label>Postal Code</label><input type="text" id="postal" placeholder="600001" autocomplete="postal-code"/></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Online Presence</div>
+      <div class="field"><label>Portfolio / Behance / Dribbble URL <span class="req">*</span></label><input type="url" id="portfolio" placeholder="https://behance.net/yourname" autocomplete="url"/><div class="error-msg" id="err-portfolio">Portfolio link is required.</div></div>
+      <div class="field" style="margin-top:14px;"><label>Personal Website / Blog</label><input type="url" id="website" placeholder="https://yoursite.com" autocomplete="url"/></div>
+    </div>
+    <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
+  </section>
+
+  <!-- ══ STEP 2 — EDUCATION ══ -->
+  <section class="form-section" id="step-2">
+    <div class="section-title"><div class="section-icon">🎓</div><div><h2>Education Background</h2><p>Degrees, diplomas and certifications</p></div></div>
+    <div class="card">
+      <div class="card-title">Academic Qualifications</div>
+      <div id="edu-rows">
+        <div class="repeat-row">
+          <div class="field-group cols-2">
+            <div class="field"><label>Degree / Qualification</label><input type="text" placeholder="e.g. B.Des in Visual Communication" autocomplete="off" list="degree-list"/>
+              <datalist id="degree-list"><option value="B.Des in Graphic Design"/><option value="B.Des in Visual Communication"/><option value="B.F.A. (Fine Arts)"/><option value="M.Des in Communication Design"/><option value="Diploma in Graphic Design"/><option value="B.Tech in Computer Science"/></datalist></div>
+            <div class="field"><label>Institution / University</label><input type="text" placeholder="e.g. NID Ahmedabad" autocomplete="organization" list="institution-list"/>
+              <datalist id="institution-list"><option value="NID Ahmedabad"/><option value="NID Bangalore"/><option value="IIT Bombay (IDC)"/><option value="NIFT Delhi"/><option value="Symbiosis Institute of Design"/><option value="Pearl Academy"/><option value="Anna University"/></datalist></div>
+          </div>
+          <div class="field-group cols-3">
+            <div class="field"><label>Department</label><input type="text" placeholder="Graphic Design" autocomplete="off" list="dept-suggestions"/>
+              <datalist id="dept-suggestions"><option value="Graphic Design"/><option value="Visual Communication"/><option value="Fine Arts"/><option value="Animation & Multimedia"/><option value="UI/UX Design"/><option value="Industrial Design"/><option value="Computer Science"/></datalist></div>
+            <div class="field"><label>Year of Passing</label><input type="text" placeholder="2023" autocomplete="off" list="year-suggestions"/>
+              <datalist id="year-suggestions"><option value="2025"/><option value="2024"/><option value="2023"/><option value="2022"/><option value="2021"/><option value="2020"/></datalist></div>
+            <div class="field"><label>Grade / CGPA</label><input type="text" placeholder="8.5 / 10" autocomplete="off"/></div>
+          </div>
+        </div>
+      </div>
+      <button class="add-row-btn" onclick="addEduRow()">+ Add Another Qualification</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Certifications & Online Courses</div>
+      <div id="cert-rows">
+        <div class="repeat-row">
+          <div class="field-group cols-3">
+            <div class="field"><label>Course / Certification Name</label><input type="text" placeholder="e.g. UI/UX Design Bootcamp" autocomplete="off" list="cert-list"/>
+              <datalist id="cert-list"><option value="UI/UX Design Bootcamp"/><option value="Google UX Design Certificate"/><option value="Adobe Certified Professional"/><option value="Figma for Beginners to Advanced"/><option value="Motion Design with After Effects"/></datalist></div>
+            <div class="field"><label>Platform / Institution</label><input type="text" placeholder="e.g. Coursera, NIFT" autocomplete="off" list="platform-list"/>
+              <datalist id="platform-list"><option value="Coursera"/><option value="Udemy"/><option value="Skillshare"/><option value="LinkedIn Learning"/><option value="Google"/><option value="Adobe"/><option value="edX"/></datalist></div>
+            <div class="field"><label>Year Completed</label><input type="text" placeholder="2024" autocomplete="off" list="year-suggestions"/></div>
+          </div>
+        </div>
+      </div>
+      <button class="add-row-btn" onclick="addCertRow()">+ Add Another Certification</button>
+    </div>
+    <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
+  </section>
+
+  <!-- ══ STEP 3 — EXPERIENCE ══ -->
+  <section class="form-section" id="step-3">
+    <div class="section-title"><div class="section-icon">💼</div><div><h2>Work Experience</h2><p>Most recent position first. Freshers may list internships or freelance projects.</p></div></div>
+    <div class="card">
+      <div class="card-title">Professional History</div>
+      <div id="exp-rows">
+        <div class="repeat-row">
+          <div class="field-group cols-2">
+            <div class="field"><label>Company / Client Name</label><input type="text" placeholder="e.g. Creative Agency Pvt Ltd" autocomplete="organization"/></div>
+            <div class="field"><label>Job Title / Role</label><input type="text" placeholder="e.g. Junior Graphic Designer" autocomplete="organization-title" list="jobtitle-list"/>
+              <datalist id="jobtitle-list"><option value="Graphic Designer"/><option value="Junior Graphic Designer"/><option value="Senior Graphic Designer"/><option value="UI/UX Designer"/><option value="Visual Designer"/><option value="Brand Designer"/><option value="Art Director"/></datalist></div>
+          </div>
+          <div class="field-group cols-2">
+            <div class="field"><label>From (MM/YYYY)</label><input type="month"/></div>
+            <div class="field"><label>To (MM/YYYY)</label><input type="month"/></div>
+          </div>
+          <div class="field"><label>Key Responsibilities</label><textarea placeholder="Briefly describe your main responsibilities and achievements..." rows="3"></textarea></div>
+        </div>
+      </div>
+      <button class="add-row-btn" onclick="addExpRow()">+ Add Another Position</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Additional Details</div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Total Years of Design Experience</label>
+          <select id="totalExp"><option value="">Select…</option><option>Fresher (0 years)</option><option>Less than 1 year</option><option>1–2 years</option><option>2–3 years</option><option>3–5 years</option><option>5+ years</option></select></div>
+        <div class="field"><label>Have you worked in a startup before?</label>
+          <div class="check-group">
+            <label class="check-item"><input type="radio" name="startup" value="Yes"/> Yes</label>
+            <label class="check-item"><input type="radio" name="startup" value="No"/> No</label>
+            <label class="check-item"><input type="radio" name="startup" value="Freelance"/> Freelance / Agency only</label>
+          </div></div>
+      </div>
+      <div class="field"><label>Describe your most significant design project</label><textarea id="sigProject" placeholder="Tell us about a project you are most proud of — the brief, your approach, and the impact..." rows="4"></textarea></div>
+    </div>
+    <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
+  </section>
+
+  <!-- ══ STEP 4 — PORTFOLIO ══ -->
+  <section class="form-section" id="step-4">
+    <div class="section-title"><div class="section-icon">🎨</div><div><h2>Portfolio & Design Skills</h2><p>Your creative specialisations and working style</p></div></div>
+    <div class="card">
+      <div class="card-title">Portfolio Links</div>
+      <div class="field"><label>Primary Portfolio URL <span class="req">*</span></label><input type="url" placeholder="https://behance.net/…  or  https://dribbble.com/…"/></div>
+      <div class="field" style="margin-top:14px;"><label>Secondary Portfolio / Case Study Link</label><input type="url" placeholder="https://…"/></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Design Specialisations (select all that apply)</div>
+      <div class="check-group" id="specialisations">
+        <label class="check-item"><input type="checkbox"/> Brand Identity / Logo Design</label>
+        <label class="check-item"><input type="checkbox"/> Social Media Graphics</label>
+        <label class="check-item"><input type="checkbox"/> Print & Publication Design</label>
+        <label class="check-item"><input type="checkbox"/> UI / UX Design</label>
+        <label class="check-item"><input type="checkbox"/> Infographics / Data Visualisation</label>
+        <label class="check-item"><input type="checkbox"/> Packaging Design</label>
+        <label class="check-item"><input type="checkbox"/> Motion Graphics / Animation</label>
+        <label class="check-item"><input type="checkbox"/> Illustration</label>
+        <label class="check-item"><input type="checkbox"/> Photo Editing / Retouching</label>
+        <label class="check-item"><input type="checkbox"/> Pitch Deck / Presentation Design</label>
+        <label class="check-item"><input type="checkbox"/> Email Design</label>
+        <label class="check-item"><input type="checkbox"/> 3D Design</label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Design Style Strengths</div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox"/> Minimalist</label>
+        <label class="check-item"><input type="checkbox"/> Bold & Expressive</label>
+        <label class="check-item"><input type="checkbox"/> Illustrative / Artistic</label>
+        <label class="check-item"><input type="checkbox"/> Corporate / Professional</label>
+        <label class="check-item"><input type="checkbox"/> Playful / Fun</label>
+        <label class="check-item"><input type="checkbox"/> Luxury / Premium</label>
+        <label class="check-item"><input type="checkbox"/> Retro / Vintage</label>
+        <label class="check-item"><input type="checkbox"/> Tech / Futuristic</label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Design Process</div>
+      <div class="field"><label>Describe your design process</label><textarea placeholder="Walk us through how you approach a new design project..." rows="4"></textarea></div>
+      <div class="field" style="margin-top:14px;"><label>How do you stay updated with design trends?</label><textarea placeholder="e.g. Dribbble, Awwwards, YouTube tutorials, design communities..." rows="3"></textarea></div>
+    </div>
+    <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
+  </section>
+
+  <!-- ══ STEP 5 — SOFTWARE ══ -->
+  <section class="form-section" id="step-5">
+    <div class="section-title"><div class="section-icon">🖥️</div><div><h2>Software Proficiency</h2><p>Select your level for each tool</p></div></div>
+    <div class="card">
+      <div class="card-title">Design Tools</div>
+      <div style="overflow-x:auto;">
+        <table class="proficiency-table">
+          <thead><tr><th style="min-width:180px;">Software / Tool</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Expert</th></tr></thead>
+          <tbody id="softwareBody"></tbody>
+        </table>
+      </div>
+      <div class="field" style="margin-top:22px;">
+        <label>Other tools you are comfortable with</label>
+        <div class="other-tool-level">
+          <div class="field"><input type="text" id="otherToolsInput" placeholder="e.g. Webflow, Lottie, Notion, Procreate, Blender…" autocomplete="off" list="other-tools-list"/>
+            <datalist id="other-tools-list"><option value="Webflow"/><option value="Lottie"/><option value="Notion"/><option value="Procreate"/><option value="Blender"/><option value="Spline"/><option value="Framer"/><option value="Miro"/><option value="Zeplin"/><option value="ProtoPie"/></datalist></div>
+          <div class="field"><label>Expertise Level</label>
+            <select id="otherToolsLevel"><option value="">Select level…</option><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option><option value="Expert">Expert</option></select></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
+  </section>
+
+  <!-- ══ STEP 6 — EMPLOYMENT ══ -->
+  <section class="form-section" id="step-6">
+    <div class="section-title"><div class="section-icon">💰</div><div><h2>Employment Details</h2><p>Compensation, notice period and availability</p></div></div>
+    <div class="card">
+      <div class="card-title">Compensation</div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Current CTC (Annual) <span class="req">*</span></label><div class="ctc-prefix"><input type="text" id="currentCTC" placeholder="4,00,000" autocomplete="off"/></div><div class="hint">Enter annual CTC in INR</div></div>
+        <div class="field"><label>Expected CTC (Annual) <span class="req">*</span></label><div class="ctc-prefix"><input type="text" id="expectedCTC" placeholder="6,00,000" autocomplete="off"/></div><div class="hint">Enter annual CTC in INR</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Notice Period</div>
+      <div class="field"><label>Notice Period (if currently employed)</label>
+        <div class="check-group" id="notice-group">
+          <label class="check-item"><input type="radio" name="notice" value="Immediate"/> Immediate</label>
+          <label class="check-item"><input type="radio" name="notice" value="15 Days"/> 15 Days</label>
+          <label class="check-item"><input type="radio" name="notice" value="30 Days"/> 30 Days</label>
+          <label class="check-item"><input type="radio" name="notice" value="60 Days"/> 60 Days</label>
+          <label class="check-item"><input type="radio" name="notice" value="90+ Days"/> 90+ Days</label>
+        </div>
+      </div>
+      <div class="field" style="margin-top:14px;"><label>If negotiable, specify details</label><input type="text" placeholder="e.g. Can exit in 2 weeks with buyout"/></div>
+      <div class="divider"></div>
+      <div class="field"><label>Are you currently serving a notice period?</label>
+        <div class="check-group"><label class="check-item"><input type="radio" name="serving" value="Yes"/> Yes</label><label class="check-item"><input type="radio" name="serving" value="No"/> No</label></div></div>
+      <div class="field" style="margin-top:14px;"><label>If Yes — Last working day with current employer</label><input type="date" id="lastWorkingDay"/></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Availability & Preferences</div>
+      <div class="field"><label>Ready to Join Date <span class="req">*</span></label><input type="date" id="joinDate"/></div>
+      <div class="divider"></div>
+      <div class="field"><label>Are you open to relocation?</label>
+        <div class="check-group"><label class="check-item"><input type="radio" name="relocate" value="Yes"/> Yes, fully open</label><label class="check-item"><input type="radio" name="relocate" value="Regional"/> Within same city / region</label><label class="check-item"><input type="radio" name="relocate" value="No"/> Prefer remote / current location</label></div></div>
+      <div class="divider"></div>
+      <div class="field"><label>Are you currently interviewing with other companies?</label>
+        <div class="check-group"><label class="check-item"><input type="radio" name="other_interviews" value="Yes"/> Yes</label><label class="check-item"><input type="radio" name="other_interviews" value="No"/> No</label></div></div>
+      <div class="field" style="margin-top:14px;"><label>If Yes — Current stage(s)</label><input type="text" placeholder="e.g. Final round at Company X, offer stage at Company Y"/></div>
+    </div>
+    <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
+  </section>
+
+  <!-- ══ STEP 7 — REFERENCES ══ -->
+  <section class="form-section" id="step-7">
+    <div class="section-title"><div class="section-icon">🤝</div><div><h2>Professional References</h2><p>Not family members. At least one reference preferred.</p></div></div>
+    <div class="card">
+      <div class="card-title">Reference 1</div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="ref1Name" placeholder="Dr. / Mr. / Ms. Full Name" autocomplete="off"/></div>
+        <div class="field"><label>Job Title / Designation <span class="req">*</span></label><input type="text" placeholder="Creative Director"/></div>
+      </div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Company / Organisation <span class="req">*</span></label><input type="text" placeholder="Company Name"/></div>
+        <div class="field"><label>Relationship to You <span class="req">*</span></label><input type="text" placeholder="e.g. Former Manager, Mentor"/></div>
+      </div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Email Address</label><input type="email" placeholder="reference@company.com"/></div>
+        <div class="field"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210"/></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Reference 2 (Optional)</div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Full Name</label><input type="text" placeholder="Dr. / Mr. / Ms. Full Name"/></div>
+        <div class="field"><label>Job Title / Designation</label><input type="text" placeholder="Senior Designer"/></div>
+      </div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Company / Organisation</label><input type="text" placeholder="Company Name"/></div>
+        <div class="field"><label>Relationship to You</label><input type="text" placeholder="e.g. Colleague, Client"/></div>
+      </div>
+      <div class="field-group cols-2">
+        <div class="field"><label>Email Address</label><input type="email" placeholder="reference@company.com"/></div>
+        <div class="field"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210"/></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Reference Contact Permission</div>
+      <div class="field"><label>May we contact your references at this stage?</label>
+        <div class="check-group">
+          <label class="check-item"><input type="radio" name="refContact" value="Yes"/> Yes, go ahead</label>
+          <label class="check-item"><input type="radio" name="refContact" value="No"/> Not yet</label>
+          <label class="check-item"><input type="radio" name="refContact" value="AfterOffer"/> Only after offer stage</label>
+        </div>
+      </div>
+    </div>
+    <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
+  </section>
+
+  <!-- ══ STEP 8 — COVER LETTER ══ -->
+  <section class="form-section" id="step-8">
+    <div class="section-title"><div class="section-icon">✍️</div><div><h2>Cover Letter & Declaration</h2><p>Tell us your story and confirm your details</p></div></div>
+    <div class="card">
+      <div class="card-title">Cover Letter</div>
+      <p style="font-size:.85rem; color:var(--slate); margin-bottom:16px; line-height:1.7;">Why do you want to join BitByte Technologies? What excites you about working in a startup? What unique value do you bring to our creative team?</p>
+      <div class="field">
+        <textarea id="coverLetter" placeholder="Dear Hiring Team,&#10;&#10;I am writing to express my interest in the Graphic Designer role at BitByte Technologies..." rows="10" required oninput="updateCharCount(this)"></textarea>
+        <div class="char-counter" id="charCounter">0 / 100 min. characters</div>
+        <div class="error-msg" id="err-coverLetter">Please write a cover letter (min. 100 characters).</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">How Did You Hear About Us?</div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox"/> LinkedIn</label>
+        <label class="check-item"><input type="checkbox"/> Company Website</label>
+        <label class="check-item"><input type="checkbox"/> Referral</label>
+        <label class="check-item"><input type="checkbox"/> Indeed / Naukri</label>
+        <label class="check-item"><input type="checkbox"/> Instagram / Social Media</label>
+        <label class="check-item"><input type="checkbox"/> Walk-in</label>
+        <label class="check-item"><input type="checkbox"/> Other</label>
+      </div>
+      <div class="field" style="margin-top:16px;"><label>If referred, name of the person who referred you</label><input type="text" placeholder="Full name of referrer"/></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Declaration</div>
+      <p style="font-size:.86rem; color:var(--slate); line-height:1.75; margin-bottom:20px;">I hereby declare that all information provided in this application form is true, accurate, and complete to the best of my knowledge. I understand that any misrepresentation or omission of facts may result in disqualification or termination of employment. I consent to BitByte Technologies verifying the information provided herein.</p>
+      <div class="check-group">
+        <label class="check-item" id="declare-item"><input type="checkbox" id="declaration" onchange="toggleDeclare(this)"/> I agree to the above declaration</label>
+      </div>
+      <div class="error-msg" id="err-declaration">You must agree to the declaration to submit.</div>
+      <div class="field-group cols-2" style="margin-top:20px;">
+        <div class="field"><label>Full Name (as signature) <span class="req">*</span></label><input type="text" id="sigName" placeholder="Your full name" autocomplete="name"/><div class="error-msg" id="err-sigName">Signature name is required.</div></div>
+        <div class="field"><label>Date of Submission <span class="req">*</span></label><input type="date" id="submitDate"/></div>
+      </div>
+    </div>
+    <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-accent" onclick="submitForm()">Submit Application 🚀</button></div>
+  </section>
+
+  <!-- ══ SUCCESS ══ -->
+  <div class="success-screen" id="successScreen">
+    <div class="confetti-wrap" id="confettiWrap"></div>
+    <div class="success-ring">✓</div>
+    <h2>Application Submitted!</h2>
+    <p>Thank you for applying to <strong style="color:var(--white);">BitByte Technologies</strong>.<br/>We have received your application for the <strong style="color:var(--brand-mid);">Graphic Designer</strong> position.<br/>Our team will review it and get back to you within <strong style="color:var(--accent);">7 working days</strong>.</p>
+    <div class="ref-box" id="refCode"></div>
+    <p style="margin-top:16px; font-size:.8rem; color:var(--slate);">Keep this reference number for your records.</p>
+    <button class="btn btn-primary" style="margin-top:28px;" onclick="openPrint()">🖨️ Preview &amp; Save PDF</button>
+  </div>
+
+</main>
+
+<button class="print-btn" onclick="openPrint()">🖨️ Preview &amp; Print PDF</button>
+<div id="printContent" style="display:none;"></div>
+
+<!-- ══ PRINT PREVIEW OVERLAY ══ -->
+<div id="printOverlay">
+  <div id="printDoc">
+    <div class="print-toolbar">
+      <span>📄 Print Preview — BitByte Technologies Application</span>
+      <div class="print-toolbar-btns">
+        <button class="pt-btn pt-btn-close" onclick="closePrint()">✕ Close</button>
+        <button class="pt-btn pt-btn-print" onclick="doPrint()">🖨️ Print / Save PDF</button>
+      </div>
+    </div>
+    <div id="printDocInner"></div>
+  </div>
+</div>
+
+<script>
+  /* ═══════════════════════════════ STATE ═══════════════════════════════ */
+  let currentStep = 0;
+  const totalSteps = 9;
+
+  const softwares = [
+    "Adobe Photoshop","Adobe Illustrator","Adobe InDesign",
+    "Figma","Canva","Adobe XD",
+    "Adobe After Effects","Adobe Premiere Pro","CorelDRAW",
+    "Sketch","Procreate","Blender / 3D Tools",
+  ];
+
+  /* ═══════════════════════════════ INIT ═══════════════════════════════ */
+  function buildSoftwareTable() {
+    const tbody = document.getElementById('softwareBody');
+    softwares.forEach((sw, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${sw}</td>${['Beginner','Intermediate','Advanced','Expert'].map(lv=>`<td><input type="radio" name="sw_${i}" value="${lv}" title="${lv}"/></td>`).join('')}`;
+      tbody.appendChild(tr);
+    });
+  }
+  buildSoftwareTable();
+
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('submitDate').value = today;
+
+  /* ═══════════════════════════════ THEME ═══════════════════════════════ */
+  function toggleTheme() {
+    const overlay = document.getElementById('themeOverlay');
+    overlay.classList.add('flash');
+    setTimeout(() => {
+      document.body.classList.toggle('light-mode');
+      localStorage.setItem('bb-theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    }, 175);
+    setTimeout(() => overlay.classList.remove('flash'), 400);
+  }
+  if (localStorage.getItem('bb-theme') === 'light') document.body.classList.add('light-mode');
+
+  /* ═══════════════════════════════ NAVIGATION ═══════════════════════════════ */
+  function goToStep(n) {
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    const tabs = document.querySelectorAll('.step-tab');
+    tabs.forEach((t, i) => {
+      t.classList.remove('active','done');
+      if (i < n) t.classList.add('done');
+    });
+    const section = document.getElementById(`step-${n}`);
+    if (section) { section.classList.add('active'); tabs[n]?.classList.add('active'); }
+    // Update connector lines
+    for (let i = 0; i < 8; i++) {
+      const conn = document.getElementById(`conn-${i}`);
+      if (conn) conn.classList.toggle('filled', i < n);
+    }
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextStep() { if (!validateStep(currentStep)) return; if (currentStep < totalSteps-1) goToStep(currentStep+1); }
+  function prevStep() { if (currentStep > 0) goToStep(currentStep-1); }
+
+  /* ═══════════════════════════════ VALIDATION ═══════════════════════════════ */
+  function showErr(id, show) {
+    const el = document.getElementById('err-'+id), inp = document.getElementById(id);
+    if (el) el.classList.toggle('show', show);
+    if (inp) inp.classList.toggle('error', show);
+    return !show;
+  }
+
+  function validateStep(step) {
+    let valid = true;
+    if (step === 1) {
+      valid &= showErr('firstName', !document.getElementById('firstName').value.trim());
+      valid &= showErr('lastName',  !document.getElementById('lastName').value.trim());
+      valid &= showErr('phone',     !document.getElementById('phone').value.trim());
+      const ev = document.getElementById('email').value.trim();
+      valid &= showErr('email', !ev || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ev));
+      valid &= showErr('portfolio', !document.getElementById('portfolio').value.trim());
+    }
+    if (step === 8) {
+      const cover = document.getElementById('coverLetter').value.trim();
+      valid &= showErr('coverLetter', cover.length < 100);
+      const declared = document.getElementById('declaration').checked;
+      document.getElementById('err-declaration').classList.toggle('show', !declared);
+      if (!declared) valid = false;
+      valid &= showErr('sigName', !document.getElementById('sigName').value.trim());
+    }
+    return !!valid;
+  }
+
+  /* ═══════════════════════════════ CHECK ITEMS ═══════════════════════════════ */
+  document.addEventListener('change', function(e) {
+    const item = e.target.closest('.check-item');
+    if (!item) return;
+    if (e.target.type === 'radio') {
+      document.querySelectorAll(`input[name="${e.target.name}"]`).forEach(r => r.closest('.check-item').classList.toggle('checked', r.checked));
+    } else if (e.target.type === 'checkbox') {
+      item.classList.toggle('checked', e.target.checked);
+    }
+  });
+
+  function toggleDeclare(cb) {
+    document.getElementById('declare-item').classList.toggle('checked', cb.checked);
+    document.getElementById('err-declaration').classList.toggle('show', !cb.checked);
+  }
+
+  /* ═══════════════════════════════ CHAR COUNTER ═══════════════════════════════ */
+  function updateCharCount(el) {
+    const len = el.value.length;
+    const counter = document.getElementById('charCounter');
+    const prev = parseInt(counter.dataset.prev || 0);
+    counter.dataset.prev = len;
+    if (len !== prev) { counter.classList.remove('bump'); void counter.offsetWidth; counter.classList.add('bump'); }
+    if (len === 0) { counter.textContent = '0 / 100 min. characters'; counter.className = 'char-counter below'; }
+    else if (len < 100) { counter.textContent = `${len} / 100 min. characters`; counter.className = 'char-counter below bump'; }
+    else if (len < 300) { counter.textContent = `${len} chars — keep going!`; counter.className = 'char-counter near bump'; }
+    else { counter.textContent = `${len} chars ✓ Great!`; counter.className = 'char-counter good bump'; }
+  }
+
+  /* ═══════════════════════════════ ADD ROWS ═══════════════════════════════ */
+  function addEduRow() {
+    const row = document.createElement('div'); row.className = 'repeat-row';
+    row.innerHTML = `<button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+      <div class="field-group cols-2">
+        <div class="field"><label>Degree / Qualification</label><input type="text" placeholder="e.g. B.Des" autocomplete="off" list="degree-list"/></div>
+        <div class="field"><label>Institution / University</label><input type="text" placeholder="University Name" autocomplete="organization" list="institution-list"/></div>
+      </div>
+      <div class="field-group cols-3">
+        <div class="field"><label>Department</label><input type="text" placeholder="Graphic Design" autocomplete="off" list="dept-suggestions"/></div>
+        <div class="field"><label>Year of Passing</label><input type="text" placeholder="2023" autocomplete="off" list="year-suggestions"/></div>
+        <div class="field"><label>Grade / CGPA</label><input type="text" placeholder="8.5" autocomplete="off"/></div>
+      </div>`;
+    document.getElementById('edu-rows').appendChild(row);
+  }
+
+  function addCertRow() {
+    const row = document.createElement('div'); row.className = 'repeat-row';
+    row.innerHTML = `<button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+      <div class="field-group cols-3">
+        <div class="field"><label>Course Name</label><input type="text" placeholder="UI/UX Bootcamp" autocomplete="off" list="cert-list"/></div>
+        <div class="field"><label>Platform</label><input type="text" placeholder="Coursera" autocomplete="off" list="platform-list"/></div>
+        <div class="field"><label>Year</label><input type="text" placeholder="2024" autocomplete="off" list="year-suggestions"/></div>
+      </div>`;
+    document.getElementById('cert-rows').appendChild(row);
+  }
+
+  function addExpRow() {
+    const row = document.createElement('div'); row.className = 'repeat-row';
+    row.innerHTML = `<button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+      <div class="field-group cols-2">
+        <div class="field"><label>Company / Client</label><input type="text" placeholder="Company Name" autocomplete="organization"/></div>
+        <div class="field"><label>Job Title</label><input type="text" placeholder="Designer Role" autocomplete="organization-title" list="jobtitle-list"/></div>
+      </div>
+      <div class="field-group cols-2">
+        <div class="field"><label>From</label><input type="month" autocomplete="off"/></div>
+        <div class="field"><label>To</label><input type="month" autocomplete="off"/></div>
+      </div>
+      <div class="field"><label>Key Responsibilities</label><textarea rows="3" placeholder="Describe responsibilities…" autocomplete="off"></textarea></div>`;
+    document.getElementById('exp-rows').appendChild(row);
+  }
+
+  /* ═══════════════════════════════ CONFETTI ═══════════════════════════════ */
+  function spawnConfetti() {
+    const wrap = document.getElementById('confettiWrap');
+    const colors = ['#4F6EF7','#7B96FF','#00C2A8','#F0A500','#F43F5E','#10B981','#60A5FA'];
+    for (let i = 0; i < 55; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.cssText = `left:${Math.random()*100}%;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-delay:${Math.random()*1.2}s;animation-duration:${1.8+Math.random()*.8}s;`;
+      wrap.appendChild(p);
+      setTimeout(() => p.remove(), 3200);
+    }
+  }
+
+  /* ═══════════════════════════════ SUBMIT ═══════════════════════════════ */
+  function submitForm() {
+    if (!validateStep(8)) return;
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('successScreen').classList.add('show');
+    const refCode = 'BB-GD-' + Date.now().toString(36).toUpperCase().slice(-6);
+    document.getElementById('refCode').textContent = 'REF: ' + refCode;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(spawnConfetti, 400);
+  }
+
+  /* ═══════════════════════════════ PRINT RENDERER ═══════════════════════════════ */
+  function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+  function getChecked(name) { const c = document.querySelector(`input[name="${name}"]:checked`); return c ? c.value : ''; }
+  function getCheckboxesFromSection(sectionId) {
+    const section = document.getElementById(sectionId); if (!section) return [];
+    const results = [];
+    section.querySelectorAll('input[type="checkbox"]').forEach(cb => { const label = cb.closest('.check-item'); if (label) results.push({ label: label.textContent.trim(), checked: cb.checked }); });
+    return results;
+  }
+  function getSelectValue(id) { const el = document.getElementById(id); return el ? el.options[el.selectedIndex]?.text || '' : ''; }
+  function getRepeatRows(containerId, fields) {
+    const container = document.getElementById(containerId); if (!container) return [];
+    const rows = [];
+    container.querySelectorAll('.repeat-row').forEach(row => {
+      const inputs = row.querySelectorAll('input, textarea, select'); const data = {};
+      fields.forEach((f, i) => { data[f] = inputs[i] ? inputs[i].value.trim() : ''; });
+      rows.push(data);
+    });
+    return rows;
+  }
+  function field(label, value, tall=false) {
+    const isEmpty = !value || value === '';
+    return `<div class="pd-field"><div class="pd-label">${label}</div><div class="pd-value${tall?' tall':''}${isEmpty?' empty':''}">${isEmpty?'Not provided':escHtml(value)}</div></div>`;
+  }
+  function chipRow(items) {
+    return `<div class="pd-check-row">${items.map(i=>`<span class="pd-chip${i.checked?' selected':''}">${escHtml(i.label)}</span>`).join('')}</div>`;
+  }
+
+  function buildPrintDoc() {
+    const refCode = 'BB-GD-' + Date.now().toString(36).toUpperCase().slice(-6);
+    const printDate = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' });
+    const firstName = val('firstName'), lastName = val('lastName');
+    const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'Not provided';
+    const gender = getChecked('gender');
+    const phone = val('phone'), altPhone = val('altPhone'), email = val('email'), linkedin = val('linkedin');
+    const address = val('address'), city = val('city'), state = val('state'), postal = val('postal');
+    const portfolio = val('portfolio'), website = val('website');
+    const eduRows = getRepeatRows('edu-rows', ['degree','institution','dept','year','grade']);
+    const certRows = getRepeatRows('cert-rows', ['course','platform','year']);
+    const expRows = getRepeatRows('exp-rows', ['company','title','from','to','responsibilities']);
+    const totalExp = getSelectValue('totalExp'), startup = getChecked('startup'), sigProject = val('sigProject');
+    const portLinks = document.querySelectorAll('#step-4 input[type="url"]');
+    const port1 = portLinks[0]?.value.trim()||'', port2 = portLinks[1]?.value.trim()||'';
+    const specialisationItems = getCheckboxesFromSection('step-4').slice(0, 12);
+    const styleItems = getCheckboxesFromSection('step-4').slice(12, 20);
+    const portfolioTAs = document.querySelectorAll('#step-4 textarea');
+    const designProcess = portfolioTAs[0]?.value.trim()||'', trendUpdate = portfolioTAs[1]?.value.trim()||'';
+    const softwareData = softwares.map((sw, i) => { const c = document.querySelector(`input[name="sw_${i}"]:checked`); return { name: sw, level: c ? c.value : '' }; });
+    const otherTools = document.getElementById('otherToolsInput')?.value.trim()||'';
+    const otherToolsLevel = document.getElementById('otherToolsLevel')?.value||'';
+    const currentCTC = val('currentCTC'), expectedCTC = val('expectedCTC');
+    const notice = getChecked('notice'), serving = getChecked('serving'), lastWorkingDay = val('lastWorkingDay');
+    const joinDate = val('joinDate'), relocate = getChecked('relocate'), otherInterviews = getChecked('other_interviews');
+    const noticeNote = document.querySelector('#step-6 input[type="text"]')?.value.trim()||'';
+    const interviewStage = document.querySelectorAll('#step-6 input[type="text"]')[1]?.value.trim()||'';
+    const refInputs = document.querySelectorAll('#step-7 input[type="text"], #step-7 input[type="email"], #step-7 input[type="tel"]');
+    const r = (i) => refInputs[i]?.value.trim()||'';
+    const refContact = getChecked('refContact');
+    const coverLetter = val('coverLetter');
+    const howHeard = getCheckboxesFromSection('step-8').filter(i => !i.label.includes('agree'));
+    const referrerName = document.querySelectorAll('#step-8 input[type="text"]')[0]?.value.trim()||'';
+    const sigName = val('sigName'), submitDate = val('submitDate');
+
+    const chipSVG = `<svg width="22" height="22" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="7" y="7" width="12" height="12" rx="2" fill="rgba(255,255,255,0.95)"/><line x1="10" y1="7" x2="10" y2="19" stroke="rgba(59,130,246,0.5)" stroke-width="0.6"/><line x1="13" y1="7" x2="13" y2="19" stroke="rgba(59,130,246,0.5)" stroke-width="0.6"/><line x1="16" y1="7" x2="16" y2="19" stroke="rgba(59,130,246,0.5)" stroke-width="0.6"/><line x1="7" y1="10" x2="19" y2="10" stroke="rgba(59,130,246,0.5)" stroke-width="0.6"/><line x1="7" y1="13" x2="19" y2="13" stroke="rgba(59,130,246,0.5)" stroke-width="0.6"/><line x1="7" y1="16" x2="19" y2="16" stroke="rgba(59,130,246,0.5)" stroke-width="0.6"/><rect x="9.5" y="3.5" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="12.25" y="3.5" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="15" y="3.5" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="9.5" y="19" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="12.25" y="19" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="15" y="19" width="1.5" height="3.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="3.5" y="9.5" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="3.5" y="12.25" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="3.5" y="15" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="19" y="9.5" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="19" y="12.25" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><rect x="19" y="15" width="3.5" height="1.5" rx="0.5" fill="rgba(255,255,255,0.9)"/><path d="M7 9 L9 7" stroke="rgba(0,194,168,0.9)" stroke-width="1" stroke-linecap="round"/><circle cx="13" cy="13" r="1.5" fill="rgba(59,130,246,0.9)"/></svg>`;
+
+    const eduTableRows = eduRows.map(r => `<tr><td>${escHtml(r.degree)||'—'}</td><td>${escHtml(r.institution)||'—'}</td><td>${escHtml(r.dept)||'—'}</td><td>${escHtml(r.year)||'—'}</td><td>${escHtml(r.grade)||'—'}</td></tr>`).join('');
+    const certTableRows = certRows.map(r => `<tr><td>${escHtml(r.course)||'—'}</td><td>${escHtml(r.platform)||'—'}</td><td>${escHtml(r.year)||'—'}</td></tr>`).join('');
+    const expTableRows = expRows.map(r => `<tr><td>${escHtml(r.company)||'—'}</td><td>${escHtml(r.title)||'—'}</td><td>${escHtml(r.from)||'—'}</td><td>${escHtml(r.to)||'—'}</td><td style="white-space:pre-wrap;">${escHtml(r.responsibilities)||'—'}</td></tr>`).join('');
+    const softRows = softwareData.map(s => `<tr><td>${escHtml(s.name)}</td>${['Beginner','Intermediate','Advanced','Expert'].map(lv=>`<td>${s.level===lv?`<span class="sel-level">✓ ${lv}</span>`:''}</td>`).join('')}</tr>`).join('');
+
+    return `
+      <div class="pd-header">
+        <div class="pd-header-top">
+          <div class="pd-logo">
+            <div class="pd-logo-icon">${chipSVG}</div>
+            <div><div class="pd-logo-name">BitByte<span style="color:rgba(255,255,255,.6)">.</span>Technologies</div><div class="pd-logo-sub">Creative & Innovation Team</div></div>
+          </div>
+          <div class="pd-ref">REF: ${refCode} &nbsp;|&nbsp; ${printDate}</div>
+        </div>
+        <div class="pd-title">Graphic Designer — Application</div>
+        <div class="pd-subtitle">Full-Time Position &nbsp;·&nbsp; On-site / Hybrid</div>
+      </div>
+      <div class="pd-body">
+        <div class="pd-section"><div class="pd-section-title">A. Personal Information</div>
+          <div class="pd-grid g3">${field('Full Name', fullName)}${field('Date of Birth', val('dob'))}${field('Nationality', val('nationality'))}</div>
+          <div class="pd-label" style="margin-bottom:6px;">Gender</div>
+          ${chipRow([{label:'Male',checked:gender==='Male'},{label:'Female',checked:gender==='Female'},{label:'Non-Binary',checked:gender==='Non-Binary'},{label:'Prefer Not to Say',checked:gender==='Prefer Not to Say'}])}
+          <div class="pd-grid g2">${field('Phone', phone)}${field('Alternate Phone', altPhone)}</div>
+          <div class="pd-grid g2">${field('Email', email)}${field('LinkedIn', linkedin)}</div>
+          ${field('Address', [address,city,state,postal].filter(Boolean).join(', '))}
+          <div class="pd-grid g2">${field('Portfolio URL', portfolio)}${field('Personal Website', website)}</div>
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-section"><div class="pd-section-title">B. Education Background</div>
+          <table class="pd-table"><thead><tr><th>Degree / Qualification</th><th>Institution</th><th>Department</th><th>Year</th><th>Grade / CGPA</th></tr></thead>
+          <tbody>${eduTableRows||'<tr><td colspan="5" style="color:#aaa;font-style:italic;">No entries</td></tr>'}</tbody></table>
+          <div class="pd-label" style="margin-bottom:6px;margin-top:14px;">Certifications / Courses</div>
+          <table class="pd-table"><thead><tr><th>Course / Certification</th><th>Platform</th><th>Year</th></tr></thead>
+          <tbody>${certTableRows||'<tr><td colspan="3" style="color:#aaa;font-style:italic;">No entries</td></tr>'}</tbody></table>
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-section"><div class="pd-section-title">C. Work Experience</div>
+          <table class="pd-table"><thead><tr><th>Company</th><th>Job Title</th><th>From</th><th>To</th><th>Key Responsibilities</th></tr></thead>
+          <tbody>${expTableRows||'<tr><td colspan="5" style="color:#aaa;font-style:italic;">No entries</td></tr>'}</tbody></table>
+          <div class="pd-grid g2">${field('Total Years of Experience', totalExp)}${field('Worked in Startup Before?', startup)}</div>
+          ${field('Most Significant Design Project', sigProject, true)}
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-section"><div class="pd-section-title">D. Portfolio & Design Skills</div>
+          <div class="pd-grid g2">${field('Primary Portfolio URL', port1)}${field('Secondary Portfolio URL', port2)}</div>
+          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">Design Specialisations</div>${chipRow(specialisationItems)}
+          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">Design Style Strengths</div>${chipRow(styleItems)}
+          ${field('Design Process', designProcess, true)}${field('How You Stay Updated', trendUpdate, true)}
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-section"><div class="pd-section-title">E. Software Proficiency</div>
+          <table class="pd-soft-table"><thead><tr><th style="min-width:140px;">Software / Tool</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Expert</th></tr></thead>
+          <tbody>${softRows}</tbody></table>
+          ${field('Other Tools', otherTools ? `${otherTools}${otherToolsLevel ? ' — ' + otherToolsLevel : ''}` : '')}
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-section"><div class="pd-section-title">F. Employment Details</div>
+          <div class="pd-grid g2">${field('Current CTC (Annual)', currentCTC ? '₹ ' + currentCTC : '')}${field('Expected CTC (Annual)', expectedCTC ? '₹ ' + expectedCTC : '')}</div>
+          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">Notice Period</div>
+          ${chipRow([{label:'Immediate',checked:notice==='Immediate'},{label:'15 Days',checked:notice==='15 Days'},{label:'30 Days',checked:notice==='30 Days'},{label:'60 Days',checked:notice==='60 Days'},{label:'90+ Days',checked:notice==='90+ Days'}])}
+          <div class="pd-grid g3" style="margin-top:10px;">${field('Notice Note', noticeNote)}${field('Serving Notice?', serving)}${field('Last Working Day', lastWorkingDay)}</div>
+          <div class="pd-grid g3">${field('Ready to Join', joinDate)}${field('Open to Relocation?', relocate)}${field('Interviewing Elsewhere?', otherInterviews)}</div>
+          ${field('Current Interview Stages', interviewStage)}
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-section"><div class="pd-section-title">G. Professional References</div>
+          <div style="font-size:.72rem;font-weight:800;color:#3451D1;margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;">Reference 1</div>
+          <div class="pd-grid g3">${field('Full Name', r(0))}${field('Job Title', r(1))}${field('Company', r(2))}</div>
+          <div class="pd-grid g3">${field('Relationship', r(3))}${field('Email', r(4))}${field('Phone', r(5))}</div>
+          <div style="font-size:.72rem;font-weight:800;color:#3451D1;margin:14px 0 8px;text-transform:uppercase;letter-spacing:.6px;">Reference 2</div>
+          <div class="pd-grid g3">${field('Full Name', r(6))}${field('Job Title', r(7))}${field('Company', r(8))}</div>
+          <div class="pd-grid g3">${field('Relationship', r(9))}${field('Email', r(10))}${field('Phone', r(11))}</div>
+          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">Contact Permission</div>
+          ${chipRow([{label:'Yes, go ahead',checked:refContact==='Yes'},{label:'Not yet',checked:refContact==='No'},{label:'Only after offer',checked:refContact==='AfterOffer'}])}
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-section"><div class="pd-section-title">H. Cover Letter</div>
+          ${field('Cover Letter', coverLetter, true)}
+          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">How Did You Hear About Us?</div>
+          ${chipRow(howHeard)}${field('Referred By', referrerName)}
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-section"><div class="pd-section-title">Declaration & Signature</div>
+          <p style="font-size:.82rem;color:#555;line-height:1.65;margin-bottom:16px;">I hereby declare that all information provided is true, accurate, and complete to the best of my knowledge. I consent to BitByte Technologies verifying the information provided herein.</p>
+          <div class="pd-grid g2">${field('Signed By', sigName)}${field('Date of Submission', submitDate)}</div>
+        </div>
+      </div>
+      <div class="pd-footer">
+        <div><div style="font-weight:800;color:#222;font-size:.82rem;">BitByte Technologies — Confidential</div><div>Graphic Designer Application &nbsp;·&nbsp; ${printDate}</div></div>
+        <div class="pd-footer-sig">${sigName ? escHtml(sigName) : '___________________________'}<br/><span style="font-size:.7rem;font-weight:500;color:#888;">Applicant Signature</span></div>
+      </div>`;
+  }
+
+  function openPrint() { document.getElementById('printDocInner').innerHTML = buildPrintDoc(); document.getElementById('printOverlay').classList.add('show'); document.getElementById('printOverlay').scrollTop = 0; }
+  function closePrint() { document.getElementById('printOverlay').classList.remove('show'); }
+
+  function doPrint() {
+    const innerHtml = buildPrintDoc();
+    const fullPage = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>BitByte Technologies — Graphic Designer Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:#111;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.no-print{display:flex;align-items:center;justify-content:space-between;padding:13px 32px;background:linear-gradient(135deg,#1e2d5f,#2d3a7a);position:sticky;top:0;z-index:99}
+.no-print span{color:#93C5FD;font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:600}
+.np-btn{padding:9px 22px;border-radius:7px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.83rem;font-weight:700;transition:all .2s}
+.np-print{background:#4F6EF7;color:#fff;box-shadow:0 4px 16px rgba(79,110,247,.4)}
+.np-print:hover{background:#7B96FF}
+.np-close{background:rgba(255,255,255,.1);color:#ccc;border:1px solid rgba(255,255,255,.15);margin-right:8px}
+.np-close:hover{background:rgba(255,255,255,.2);color:#fff}
+#doc{max-width:820px;margin:0 auto;padding-bottom:48px}
+.pd-header{background:linear-gradient(135deg,#3451D1,#4F6EF7,#00C2A8);color:#fff;padding:34px 40px 26px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.pd-logo{display:flex;align-items:center;gap:11px}
+.pd-logo-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#4F6EF7,#7B96FF);display:flex;align-items:center;justify-content:center;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-logo-name{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:-.2px}
+.pd-logo-sub{font-size:.58rem;color:rgba(255,255,255,.7);letter-spacing:1.2px;text-transform:uppercase;font-weight:700;font-family:'Outfit',sans-serif}
+.pd-ref{font-size:.75rem;color:rgba(255,255,255,.7);font-family:'Outfit',sans-serif}
+.pd-title{font-family:'Outfit',sans-serif;font-size:1.7rem;font-weight:900;margin-bottom:4px;letter-spacing:-.4px}
+.pd-subtitle{font-size:.9rem;color:rgba(255,255,255,.75)}
+.pd-body{padding:0 40px}
+.pd-section{margin-top:28px}
+.pd-section-title{display:flex;align-items:center;gap:10px;font-family:'Outfit',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#3451D1;margin-bottom:14px;padding-bottom:9px;border-bottom:2px solid #DBEAFE;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-section-title::before{content:'';width:3px;height:14px;border-radius:2px;background:linear-gradient(#4F6EF7,#00C2A8);flex-shrink:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-grid{display:grid;gap:14px;margin-bottom:14px}
+.pd-grid.g2{grid-template-columns:1fr 1fr}
+.pd-grid.g3{grid-template-columns:1fr 1fr 1fr}
+.pd-field{display:flex;flex-direction:column;gap:3px}
+.pd-label{font-size:.67rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#888;font-family:'Outfit',sans-serif}
+.pd-value{font-size:.88rem;color:#111;line-height:1.5;padding:7px 10px;background:#f7f7fa;border:1px solid #e5e5ed;border-radius:6px;min-height:34px;word-break:break-word;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-value.tall{min-height:70px;white-space:pre-wrap}
+.pd-value.empty{color:#bbb;font-style:italic}
+.pd-check-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.pd-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:.8rem;border:1.5px solid #e5e5ed;background:#f7f7fa;color:#555;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-chip.selected{background:#DBEAFE;border-color:#4F6EF7;color:#1D4ED8;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-chip.selected::before{content:'✓ '}
+.pd-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:.82rem}
+.pd-table th{background:#4F6EF7;color:#fff;padding:8px 10px;text-align:left;font-family:'Outfit',sans-serif;font-size:.67rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-table td{padding:8px 10px;border:1px solid #e5e5ed;vertical-align:top;color:#333}
+.pd-table tr:nth-child(even) td{background:#f9f9fc;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-divider{height:1px;background:#eee;margin:20px 0}
+.pd-soft-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:14px}
+.pd-soft-table th{background:#4F6EF7;color:#fff;padding:7px 8px;text-align:center;font-family:'Outfit',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-soft-table th:first-child{text-align:left}
+.pd-soft-table td{padding:7px 8px;border:1px solid #e5e5ed;text-align:center;color:#555}
+.pd-soft-table td:first-child{text-align:left;color:#222;font-weight:600}
+.pd-soft-table tr:nth-child(even) td{background:#f9f9fc;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sel-level{background:#DBEAFE;color:#3451D1;font-weight:700;border-radius:4px;padding:2px 8px;font-size:.72rem;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-footer{margin:40px 40px 0;padding:18px;background:#f7f7fa;border:1px solid #e5e5ed;border-radius:9px;display:flex;justify-content:space-between;align-items:flex-end;font-size:.78rem;color:#888;font-family:'Outfit',sans-serif;position:relative;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pd-footer::before{content:'CONFIDENTIAL — BITBYTE TECHNOLOGIES';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);font-size:1.4rem;font-weight:900;color:rgba(79,110,247,.05);letter-spacing:3px;white-space:nowrap;font-family:'Outfit',sans-serif;pointer-events:none}
+.pd-footer-sig{font-size:.85rem;color:#333;font-weight:700}
+@media print{
+  .no-print{display:none!important}
+  body{background:#fff}
+  #doc{max-width:100%;padding:0}
+  @page{margin:10mm;size:A4}
+}
+</style></head><body>
+<div class="no-print">
+  <span>📄 BitByte Technologies — Application Preview</span>
+  <div><button class="np-btn np-close" onclick="window.close()">✕ Close</button><button class="np-btn np-print" onclick="window.print()">🖨️ Save as PDF / Print</button></div>
+</div>
+<div id="doc">${innerHtml}</div>
+<script>window.addEventListener('load', function(){ setTimeout(function(){ window.print(); }, 800); });<\/script>
+</body></html>`;
+    const blob = new Blob([fullPage], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+    if (win) win.addEventListener('load', () => setTimeout(() => URL.revokeObjectURL(url), 3000));
+    else alert('Pop-up blocked! Please allow pop-ups for this page, then click Print again.');
+  }
+</script>
+</body>
+</html>
