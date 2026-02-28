@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BitByte Technologies — Graphic Designer Application</title>
+<title>BitByte Technologies — Python Full Stack Developer Application</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&family=Dancing+Script:wght@400;600;700&family=Pacifico&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 /* ═══════════════════════════════════════════════
@@ -872,6 +872,194 @@ body.light-mode .photo-upload-zone { background: rgba(79,110,247,.04); border-co
 body.light-mode .photo-req-chip { background: rgba(238,241,255,.9); border-color: rgba(79,110,247,.2); }
 
 /* ═══════════════════════════════════════════════
+   PHOTO SOURCE TABS (Upload / Camera)
+═══════════════════════════════════════════════ */
+.photo-src-tabs {
+  display: flex; gap: 0; margin-bottom: 16px;
+  border-bottom: 1.5px solid rgba(79,110,247,.15);
+}
+.photo-src-tab {
+  display: flex; align-items: center; gap: 7px;
+  background: transparent; border: none; border-bottom: 2.5px solid transparent;
+  padding: 9px 22px; font-family: 'Outfit', sans-serif; font-size: .82rem; font-weight: 700;
+  color: var(--slate); cursor: pointer; transition: all .2s; margin-bottom: -1.5px;
+  letter-spacing: .3px;
+}
+.photo-src-tab.active { color: var(--brand-mid); border-bottom-color: var(--brand); }
+.photo-src-tab:hover:not(.active) { color: var(--off-white); }
+.photo-src-panel { display: none; }
+.photo-src-panel.active { display: block; }
+body.light-mode .photo-src-tab { color: var(--slate); }
+body.light-mode .photo-src-tab.active { color: var(--brand); }
+
+/* ═══════════════════════════════════════════════
+   CAMERA PANEL
+═══════════════════════════════════════════════ */
+.cam-wrap {
+  border: 1.5px solid rgba(79,110,247,.2);
+  border-radius: var(--radius);
+  background: rgba(11,15,30,.5);
+  overflow: hidden;
+  min-height: 220px;
+  display: flex; align-items: center; justify-content: center;
+}
+.cam-idle {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40px 24px; text-align: center;
+}
+.cam-idle-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(79,110,247,.1); border: 1.5px solid rgba(79,110,247,.22);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 0 32px rgba(79,110,247,.2);
+}
+.cam-idle-title {
+  font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 800;
+  color: var(--off-white); margin-bottom: 6px;
+}
+.cam-idle-hint {
+  font-size: .8rem; color: var(--slate); line-height: 1.6; max-width: 320px;
+}
+
+/* Live feed */
+.cam-live { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.cam-video-wrap {
+  position: relative; width: 100%; max-width: 480px;
+  background: #000; overflow: hidden;
+  aspect-ratio: 4/3;
+}
+#camVideo {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block;
+  transform: scaleX(-1); /* mirror for selfie view */
+}
+.cam-face-guide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.cam-face-oval {
+  width: 38%; aspect-ratio: 3/4;
+  border: 2.5px dashed rgba(79,110,247,.65);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2000px rgba(0,0,0,.28);
+  animation: ovalPulse 2.5s ease-in-out infinite;
+}
+@keyframes ovalPulse {
+  0%, 100% { border-color: rgba(79,110,247,.5); box-shadow: 0 0 0 2000px rgba(0,0,0,.28), 0 0 20px rgba(79,110,247,.3); }
+  50%       { border-color: rgba(0,194,168,.7);  box-shadow: 0 0 0 2000px rgba(0,0,0,.28), 0 0 28px rgba(0,194,168,.4); }
+}
+.cam-guide-label {
+  margin-top: 12px; font-size: .68rem; font-weight: 700; letter-spacing: .8px;
+  text-transform: uppercase; color: rgba(255,255,255,.55);
+  font-family: 'Outfit', sans-serif; text-shadow: 0 1px 4px rgba(0,0,0,.8);
+}
+
+/* Countdown overlay */
+.cam-countdown {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(2px);
+}
+#camCountNum {
+  font-family: 'Outfit', sans-serif; font-size: 7rem; font-weight: 900;
+  color: #fff; text-shadow: 0 0 40px rgba(79,110,247,.9), 0 0 80px rgba(79,110,247,.5);
+  animation: countPop .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes countPop { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Flash effect on capture */
+.cam-flash {
+  position: absolute; inset: 0;
+  background: #fff; opacity: 0;
+  pointer-events: none;
+  animation: flashFade .35s ease both;
+}
+@keyframes flashFade { 0% { opacity: .9; } 100% { opacity: 0; } }
+
+/* Camera controls bar */
+.cam-controls {
+  width: 100%; max-width: 480px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; background: rgba(11,15,30,.85);
+  border-top: 1px solid rgba(79,110,247,.15);
+}
+.cam-controls-left, .cam-controls-right { display: flex; gap: 8px; }
+.cam-btn {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 1.5px solid rgba(79,110,247,.28); background: rgba(79,110,247,.1);
+  color: var(--slate); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .2s; flex-shrink: 0;
+}
+.cam-btn:hover { background: rgba(79,110,247,.25); color: var(--off-white); border-color: var(--brand); }
+.cam-btn-danger { border-color: rgba(244,63,94,.3); background: rgba(244,63,94,.1); }
+.cam-btn-danger:hover { background: rgba(244,63,94,.25); color: var(--error); border-color: var(--error); }
+
+/* Shutter button */
+.cam-shutter {
+  width: 66px; height: 66px; border-radius: 50%;
+  background: rgba(255,255,255,.15); border: 3px solid rgba(255,255,255,.75);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .2s; flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(255,255,255,.08);
+}
+.cam-shutter:hover { transform: scale(1.08); background: rgba(255,255,255,.22); box-shadow: 0 0 0 6px rgba(79,110,247,.25); }
+.cam-shutter:active { transform: scale(.94); }
+.cam-shutter-inner {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: linear-gradient(135deg, #fff, rgba(255,255,255,.85));
+  display: block; transition: all .15s;
+  box-shadow: 0 2px 10px rgba(0,0,0,.3);
+}
+.cam-shutter:active .cam-shutter-inner { width: 42px; height: 42px; }
+
+.cam-tip {
+  font-size: .72rem; color: var(--slate); padding: 10px 16px;
+  font-family: 'Outfit', sans-serif; text-align: center; width: 100%; max-width: 480px;
+  background: rgba(11,15,30,.6);
+}
+.cam-tip kbd {
+  font-family: 'Outfit', monospace; background: rgba(79,110,247,.18);
+  border: 1px solid rgba(79,110,247,.3); border-radius: 4px; padding: 1px 6px; font-size: .7rem;
+}
+
+/* Captured preview */
+.cam-preview-state {
+  width: 100%; display: flex; flex-direction: column; align-items: center;
+  padding: 28px 20px;
+}
+.cam-preview-frame {
+  position: relative; display: inline-block; margin-bottom: 20px;
+}
+.cam-preview-frame img {
+  width: 160px; height: 180px; object-fit: cover;
+  border-radius: 14px; border: 3px solid var(--success);
+  box-shadow: 0 0 32px rgba(16,185,129,.45), 0 8px 30px rgba(0,0,0,.4);
+  display: block;
+}
+.cam-preview-badge {
+  position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: #fff; font-family: 'Outfit', sans-serif; font-size: .68rem; font-weight: 800;
+  padding: 4px 14px; border-radius: 20px; white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(16,185,129,.5); letter-spacing: .4px;
+}
+.cam-preview-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
+
+/* camera error */
+.cam-error { display: flex; flex-direction: column; align-items: center; padding: 40px 24px; text-align: center; }
+
+/* Light mode camera tweaks */
+body.light-mode .cam-wrap { background: rgba(240,244,255,.7); border-color: rgba(79,110,247,.22); }
+body.light-mode .cam-idle-title { color: #1A1F3C; }
+body.light-mode .cam-controls { background: rgba(255,255,255,.9); border-top-color: rgba(79,110,247,.15); }
+body.light-mode .cam-tip { background: rgba(238,241,255,.8); }
+body.light-mode .cam-btn { background: rgba(238,241,255,.9); border-color: rgba(79,110,247,.25); color: var(--slate); }
+body.light-mode .cam-btn:hover { background: rgba(79,110,247,.15); color: var(--brand); }
+
+/* ═══════════════════════════════════════════════
    CROP MODAL
 ═══════════════════════════════════════════════ */
 #cropModal {
@@ -1241,7 +1429,7 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
   </div>
   <div class="header-right">
     <div class="header-live"><div class="live-dot"></div>Now Hiring</div>
-    <div class="header-badge">Graphic Designer · Application</div>
+    <div class="header-badge">Python Full Stack Developer · Application</div>
     <div class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
       <span class="theme-icon">🌙</span>
       <div class="theme-toggle-track"><div class="theme-toggle-thumb"></div></div>
@@ -1261,9 +1449,9 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     <div class="step-connector" id="conn-2"></div>
     <button class="step-tab" onclick="goToStep(3)"><div class="step-num">4</div><div class="step-label">Experience</div></button>
     <div class="step-connector" id="conn-3"></div>
-    <button class="step-tab" onclick="goToStep(4)"><div class="step-num">5</div><div class="step-label">Portfolio</div></button>
+    <button class="step-tab" onclick="goToStep(4)"><div class="step-num">5</div><div class="step-label">Tech Skills</div></button>
     <div class="step-connector" id="conn-4"></div>
-    <button class="step-tab" onclick="goToStep(5)"><div class="step-num">6</div><div class="step-label">Software</div></button>
+    <button class="step-tab" onclick="goToStep(5)"><div class="step-num">6</div><div class="step-label">Tech Stack</div></button>
     <div class="step-connector" id="conn-5"></div>
     <button class="step-tab" onclick="goToStep(6)"><div class="step-num">7</div><div class="step-label">Employment</div></button>
     <div class="step-connector" id="conn-6"></div>
@@ -1285,45 +1473,62 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     </div>
     <div class="jd-card">
       <div class="jd-header"><div class="jd-badge">Now Hiring</div><div class="jd-badge-accent">Full-Time</div></div>
-      <div class="jd-role">Graphic Designer</div>
-      <div class="jd-company">BitByte Technologies &nbsp;·&nbsp; <span>Creative & Innovation Team</span></div>
+      <div class="jd-role">Python Full Stack Developer</div>
+      <div class="jd-company">BitByte Technologies &nbsp;·&nbsp; <span>Engineering & Product Team</span></div>
       <div class="jd-meta">
-        <div class="jd-chip">📍 <span>On-site / Hybrid</span></div>
-        <div class="jd-chip">🏢 <span>Creative & Marketing</span></div>
-        <div class="jd-chip">⭐ <span>1–3 Years Exp.</span></div>
-        <div class="jd-chip">👤 Reports to <span>Creative Director</span></div>
+        <div class="jd-chip">📍 <span>Work from Office / Hybrid</span></div>
+        <div class="jd-chip">🏢 <span>Engineering & Product</span></div>
+        <div class="jd-chip">⭐ <span>3+ Years Exp.</span></div>
+        <div class="jd-chip">👤 Reports to <span>CEO / Director - Technology</span></div>
+        <div class="jd-chip">🔖 Job No: <span>BBED001</span></div>
       </div>
       <div class="jd-divider"></div>
       <div class="jd-block">
         <h4>Role Overview</h4>
-        <p style="font-size:.87rem; color:var(--slate); line-height:1.8;">We are a fast-growing tech startup looking for a talented Graphic Designer to shape our visual identity. You'll work closely with marketing, product, and leadership teams to create compelling design assets that communicate our brand story across digital and print channels.</p>
+        <p style="font-size:.87rem; color:var(--slate); line-height:1.8;">We are looking for an experienced Python Full Stack Developer to join our core engineering team. You will design, build, and maintain scalable web applications from backend APIs to polished frontend interfaces. You will be a key contributor in shaping product decisions, architecture choices, and development workflows as we scale. This is a high-impact role with broad ownership — not a ticket-queue developer position.</p>
+      </div>
+      <div class="jd-block">
+        <h4>Tech Stack</h4>
+        <ul class="jd-list">
+          <li>Backend: Python 3.x, Django, FastAPI, Flask, REST APIs & GraphQL</li>
+          <li>Database: PostgreSQL, MySQL, Redis</li>
+          <li>Frontend: React.js / Next.js, HTML5 / CSS3 / JavaScript</li>
+          <li>DevOps: Docker & Docker Compose, AWS / GCP / Azure, CI/CD Pipelines</li>
+          <li>Version Control: Git & GitHub</li>
+        </ul>
       </div>
       <div class="jd-block">
         <h4>Key Responsibilities</h4>
         <ul class="jd-list">
-          <li>Design visual content for social media, ads, presentations, pitch decks, and brand collateral.</li>
-          <li>Develop and maintain consistent brand identity across all touchpoints.</li>
-          <li>Create UI/UX wireframes and mockups in collaboration with the product team.</li>
-          <li>Produce motion graphics and short video assets for digital campaigns.</li>
-          <li>Manage multiple projects simultaneously and meet tight deadlines.</li>
+          <li>Design, develop, and maintain full stack web applications using Python on the backend and modern JavaScript frameworks on the frontend.</li>
+          <li>Build and document RESTful APIs and GraphQL endpoints consumed by web and mobile clients.</li>
+          <li>Architect scalable, secure, and maintainable database schemas using PostgreSQL or MySQL.</li>
+          <li>Write clean, well-tested code with unit, integration, and end-to-end test coverage.</li>
+          <li>Deploy and manage cloud infrastructure on AWS, GCP, or Azure using containerized services.</li>
+          <li>Integrate third-party services, payment gateways, authentication providers, and external APIs.</li>
+          <li>Optimize application performance through profiling, caching strategies, and query tuning.</li>
         </ul>
       </div>
       <div class="jd-block">
-        <h4>Required Skills</h4>
+        <h4>Required Qualifications</h4>
         <ul class="jd-list">
-          <li>Proficiency in Adobe Creative Suite (Photoshop, Illustrator, InDesign) and Figma.</li>
-          <li>Strong understanding of typography, colour theory, layout, and visual hierarchy.</li>
-          <li>A compelling portfolio showcasing diverse design work.</li>
-          <li>Degree/diploma in Graphic Design or Visual Communication (preferred, not mandatory).</li>
-          <li>Excellent communication and collaborative, startup mindset.</li>
+          <li>3+ years of professional experience in full stack web development.</li>
+          <li>Strong proficiency in Python with hands-on experience in Django, FastAPI, or Flask.</li>
+          <li>Solid frontend skills in React.js or similar modern JavaScript framework (Vue, Angular).</li>
+          <li>Proven experience designing and working with relational databases (PostgreSQL, MySQL).</li>
+          <li>Familiarity with Docker and containerized development environments.</li>
+          <li>Practical knowledge of cloud deployment on at least one major provider (AWS, GCP, Azure).</li>
         </ul>
       </div>
       <div class="jd-block">
         <h4>Nice to Have</h4>
         <ul class="jd-list">
-          <li>Experience with motion graphics (After Effects, Premiere Pro).</li>
-          <li>Basic knowledge of HTML/CSS for email or web design.</li>
-          <li>Prior experience in a startup or agency environment.</li>
+          <li>Experience with Celery, RabbitMQ, Redis for async task queues.</li>
+          <li>Familiarity with WebSockets or real-time communication patterns.</li>
+          <li>Exposure to microservices architecture and service-oriented design.</li>
+          <li>Knowledge of Elasticsearch or similar full-text search technologies.</li>
+          <li>Experience with Terraform or AWS CDK (infrastructure-as-code).</li>
+          <li>Contributions to open-source Python or JavaScript projects.</li>
         </ul>
       </div>
     </div>
@@ -1374,8 +1579,8 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     </div>
     <div class="card">
       <div class="card-title">Online Presence</div>
-      <div class="field"><label>Portfolio / Behance / Dribbble URL <span class="req">*</span></label><input type="url" id="portfolio" placeholder="https://behance.net/yourname" autocomplete="url"/><div class="error-msg" id="err-portfolio">Portfolio link is required.</div></div>
-      <div class="field" style="margin-top:14px;"><label>Personal Website / Blog</label><input type="url" id="website" placeholder="https://yoursite.com" autocomplete="url"/></div>
+      <div class="field"><label>GitHub Profile URL <span class="req">*</span></label><input type="url" id="portfolio" placeholder="https://github.com/yourusername" autocomplete="url"/><div class="error-msg" id="err-portfolio">GitHub profile link is required.</div></div>
+      <div class="field" style="margin-top:14px;"><label>Personal Website / Portfolio</label><input type="url" id="website" placeholder="https://yoursite.com" autocomplete="url"/></div>
     </div>
     <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
   </section>
@@ -1388,15 +1593,15 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
       <div id="edu-rows">
         <div class="repeat-row">
           <div class="field-group cols-2">
-            <div class="field"><label>Degree / Qualification</label><input type="text" placeholder="e.g. B.Des in Visual Communication" autocomplete="off" list="degree-list"/>
-              <datalist id="degree-list"><option value="B.Des in Graphic Design"/><option value="B.Des in Visual Communication"/><option value="B.F.A. (Fine Arts)"/><option value="M.Des in Communication Design"/><option value="Diploma in Graphic Design"/><option value="B.Tech in Computer Science"/></datalist></div>
-            <div class="field"><label>Institution / University</label><input type="text" placeholder="e.g. NID Ahmedabad" autocomplete="organization" list="institution-list"/>
-              <datalist id="institution-list"><option value="NID Ahmedabad"/><option value="NID Bangalore"/><option value="IIT Bombay (IDC)"/><option value="NIFT Delhi"/><option value="Symbiosis Institute of Design"/><option value="Pearl Academy"/><option value="Anna University"/></datalist></div>
+            <div class="field"><label>Degree / Qualification</label><input type="text" placeholder="e.g. B.Tech in Computer Science" autocomplete="off" list="degree-list"/>
+              <datalist id="degree-list"><option value="B.Tech in Computer Science"/><option value="B.E. in Information Technology"/><option value="MCA (Master of Computer Applications)"/><option value="M.Tech in Computer Science"/><option value="B.Sc in Computer Science"/><option value="BCA (Bachelor of Computer Applications)"/><option value="Diploma in Software Engineering"/></datalist></div>
+            <div class="field"><label>Institution / University</label><input type="text" placeholder="e.g. IIT Madras" autocomplete="organization" list="institution-list"/>
+              <datalist id="institution-list"><option value="IIT Madras"/><option value="IIT Bombay"/><option value="NIT Trichy"/><option value="Anna University"/><option value="VIT Vellore"/><option value="SRM University"/><option value="BITS Pilani"/></datalist></div>
           </div>
           <div class="field-group cols-3">
-            <div class="field"><label>Department</label><input type="text" placeholder="Graphic Design" autocomplete="off" list="dept-suggestions"/>
-              <datalist id="dept-suggestions"><option value="Graphic Design"/><option value="Visual Communication"/><option value="Fine Arts"/><option value="Animation & Multimedia"/><option value="UI/UX Design"/><option value="Industrial Design"/><option value="Computer Science"/></datalist></div>
-            <div class="field"><label>Year of Passing</label><input type="text" placeholder="2023" autocomplete="off" list="year-suggestions"/>
+            <div class="field"><label>Department</label><input type="text" placeholder="Computer Science & Engineering" autocomplete="off" list="dept-suggestions"/>
+              <datalist id="dept-suggestions"><option value="Computer Science & Engineering"/><option value="Information Technology"/><option value="Electronics & Communication"/><option value="Software Engineering"/><option value="MCA"/><option value="BCA"/></datalist></div>
+            <div class="field"><label>Year of Passing</label><input type="text" placeholder="2022" autocomplete="off" list="year-suggestions"/>
               <datalist id="year-suggestions"><option value="2025"/><option value="2024"/><option value="2023"/><option value="2022"/><option value="2021"/><option value="2020"/></datalist></div>
             <div class="field"><label>Grade / CGPA</label><input type="text" placeholder="8.5 / 10" autocomplete="off"/></div>
           </div>
@@ -1409,10 +1614,10 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
       <div id="cert-rows">
         <div class="repeat-row">
           <div class="field-group cols-3">
-            <div class="field"><label>Course / Certification Name</label><input type="text" placeholder="e.g. UI/UX Design Bootcamp" autocomplete="off" list="cert-list"/>
-              <datalist id="cert-list"><option value="UI/UX Design Bootcamp"/><option value="Google UX Design Certificate"/><option value="Adobe Certified Professional"/><option value="Figma for Beginners to Advanced"/><option value="Motion Design with After Effects"/></datalist></div>
-            <div class="field"><label>Platform / Institution</label><input type="text" placeholder="e.g. Coursera, NIFT" autocomplete="off" list="platform-list"/>
-              <datalist id="platform-list"><option value="Coursera"/><option value="Udemy"/><option value="Skillshare"/><option value="LinkedIn Learning"/><option value="Google"/><option value="Adobe"/><option value="edX"/></datalist></div>
+            <div class="field"><label>Course / Certification Name</label><input type="text" placeholder="e.g. AWS Solutions Architect" autocomplete="off" list="cert-list"/>
+              <datalist id="cert-list"><option value="AWS Certified Developer"/><option value="AWS Solutions Architect"/><option value="Google Professional Cloud Developer"/><option value="Django REST Framework Mastery"/><option value="Full Stack Web Development Bootcamp"/><option value="Docker & Kubernetes Essentials"/><option value="FastAPI — The Complete Course"/></datalist></div>
+            <div class="field"><label>Platform / Institution</label><input type="text" placeholder="e.g. Coursera, AWS" autocomplete="off" list="platform-list"/>
+              <datalist id="platform-list"><option value="Coursera"/><option value="Udemy"/><option value="AWS"/><option value="Google Cloud"/><option value="LinkedIn Learning"/><option value="edX"/><option value="FreeCodeCamp"/></datalist></div>
             <div class="field"><label>Year Completed</label><input type="text" placeholder="2024" autocomplete="off" list="year-suggestions"/></div>
           </div>
         </div>
@@ -1424,21 +1629,21 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
 
   <!-- ══ STEP 3 — EXPERIENCE ══ -->
   <section class="form-section" id="step-3">
-    <div class="section-title"><div class="section-icon">💼</div><div><h2>Work Experience</h2><p>Most recent position first. Freshers may list internships or freelance projects.</p></div></div>
+    <div class="section-title"><div class="section-icon">💼</div><div><h2>Work Experience</h2><p>Most recent position first. Include internships and freelance projects.</p></div></div>
     <div class="card">
       <div class="card-title">Professional History</div>
       <div id="exp-rows">
         <div class="repeat-row">
           <div class="field-group cols-2">
-            <div class="field"><label>Company / Client Name</label><input type="text" placeholder="e.g. Creative Agency Pvt Ltd" autocomplete="organization"/></div>
-            <div class="field"><label>Job Title / Role</label><input type="text" placeholder="e.g. Junior Graphic Designer" autocomplete="organization-title" list="jobtitle-list"/>
-              <datalist id="jobtitle-list"><option value="Graphic Designer"/><option value="Junior Graphic Designer"/><option value="Senior Graphic Designer"/><option value="UI/UX Designer"/><option value="Visual Designer"/><option value="Brand Designer"/><option value="Art Director"/></datalist></div>
+            <div class="field"><label>Company / Client Name</label><input type="text" placeholder="e.g. Startup Pvt Ltd" autocomplete="organization"/></div>
+            <div class="field"><label>Job Title / Role</label><input type="text" placeholder="e.g. Python Backend Developer" autocomplete="organization-title" list="jobtitle-list"/>
+              <datalist id="jobtitle-list"><option value="Python Developer"/><option value="Full Stack Developer"/><option value="Backend Engineer"/><option value="Django Developer"/><option value="Software Engineer"/><option value="Senior Software Engineer"/><option value="Lead Engineer"/></datalist></div>
           </div>
           <div class="field-group cols-2">
             <div class="field"><label>From (MM/YYYY)</label><input type="month"/></div>
             <div class="field"><label>To (MM/YYYY)</label><input type="month"/></div>
           </div>
-          <div class="field"><label>Key Responsibilities</label><textarea placeholder="Briefly describe your main responsibilities and achievements..." rows="3"></textarea></div>
+          <div class="field"><label>Key Responsibilities & Achievements</label><textarea placeholder="e.g. Built REST APIs using Django REST Framework, reduced query response time by 40% via Redis caching..." rows="3"></textarea></div>
         </div>
       </div>
       <button class="add-row-btn" onclick="addExpRow()">+ Add Another Position</button>
@@ -1446,7 +1651,7 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     <div class="card">
       <div class="card-title">Additional Details</div>
       <div class="field-group cols-2">
-        <div class="field"><label>Total Years of Design Experience</label>
+        <div class="field"><label>Total Years of Dev Experience</label>
           <select id="totalExp"><option value="">Select…</option><option>Fresher (0 years)</option><option>Less than 1 year</option><option>1–2 years</option><option>2–3 years</option><option>3–5 years</option><option>5+ years</option></select></div>
         <div class="field"><label>Have you worked in a startup before?</label>
           <div class="check-group">
@@ -1455,62 +1660,61 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
             <label class="check-item"><input type="radio" name="startup" value="Freelance"/> Freelance / Agency only</label>
           </div></div>
       </div>
-      <div class="field"><label>Describe your most significant design project</label><textarea id="sigProject" placeholder="Tell us about a project you are most proud of — the brief, your approach, and the impact..." rows="4"></textarea></div>
+      <div class="field"><label>Describe your most significant technical project</label><textarea id="sigProject" placeholder="Tell us about a project you are most proud of — the problem, your approach, the stack used, and the impact..." rows="4"></textarea></div>
     </div>
     <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
   </section>
 
-  <!-- ══ STEP 4 — PORTFOLIO ══ -->
+  <!-- ══ STEP 4 — TECH SKILLS ══ -->
   <section class="form-section" id="step-4">
-    <div class="section-title"><div class="section-icon">🎨</div><div><h2>Portfolio & Design Skills</h2><p>Your creative specialisations and working style</p></div></div>
+    <div class="section-title"><div class="section-icon">⚙️</div><div><h2>Technical Skills & Projects</h2><p>Your specialisations, open-source work, and coding style</p></div></div>
     <div class="card">
-      <div class="card-title">Portfolio Links</div>
-      <div class="field"><label>Primary Portfolio URL <span class="req">*</span></label><input type="url" placeholder="https://behance.net/…  or  https://dribbble.com/…"/></div>
-      <div class="field" style="margin-top:14px;"><label>Secondary Portfolio / Case Study Link</label><input type="url" placeholder="https://…"/></div>
+      <div class="card-title">GitHub & Portfolio Links</div>
+      <div class="field"><label>GitHub Profile URL <span class="req">*</span></label><input type="url" placeholder="https://github.com/yourusername"/></div>
+      <div class="field" style="margin-top:14px;"><label>Portfolio / Personal Website</label><input type="url" placeholder="https://yourportfolio.com"/></div>
+      <div class="field" style="margin-top:14px;"><label>Notable Project / Repository Link</label><input type="url" placeholder="https://github.com/yourname/your-best-project"/></div>
     </div>
     <div class="card">
-      <div class="card-title">Design Specialisations (select all that apply)</div>
-      <div class="check-group" id="specialisations">
-        <label class="check-item"><input type="checkbox"/> Brand Identity / Logo Design</label>
-        <label class="check-item"><input type="checkbox"/> Social Media Graphics</label>
-        <label class="check-item"><input type="checkbox"/> Print & Publication Design</label>
-        <label class="check-item"><input type="checkbox"/> UI / UX Design</label>
-        <label class="check-item"><input type="checkbox"/> Infographics / Data Visualisation</label>
-        <label class="check-item"><input type="checkbox"/> Packaging Design</label>
-        <label class="check-item"><input type="checkbox"/> Motion Graphics / Animation</label>
-        <label class="check-item"><input type="checkbox"/> Illustration</label>
-        <label class="check-item"><input type="checkbox"/> Photo Editing / Retouching</label>
-        <label class="check-item"><input type="checkbox"/> Pitch Deck / Presentation Design</label>
-        <label class="check-item"><input type="checkbox"/> Email Design</label>
-        <label class="check-item"><input type="checkbox"/> 3D Design</label>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Design Style Strengths</div>
+      <div class="card-title">Backend Specialisations (select all that apply)</div>
       <div class="check-group">
-        <label class="check-item"><input type="checkbox"/> Minimalist</label>
-        <label class="check-item"><input type="checkbox"/> Bold & Expressive</label>
-        <label class="check-item"><input type="checkbox"/> Illustrative / Artistic</label>
-        <label class="check-item"><input type="checkbox"/> Corporate / Professional</label>
-        <label class="check-item"><input type="checkbox"/> Playful / Fun</label>
-        <label class="check-item"><input type="checkbox"/> Luxury / Premium</label>
-        <label class="check-item"><input type="checkbox"/> Retro / Vintage</label>
-        <label class="check-item"><input type="checkbox"/> Tech / Futuristic</label>
+        <label class="check-item"><input type="checkbox"/> Django / Django REST Framework</label>
+        <label class="check-item"><input type="checkbox"/> FastAPI</label>
+        <label class="check-item"><input type="checkbox"/> Flask</label>
+        <label class="check-item"><input type="checkbox"/> RESTful API Design</label>
+        <label class="check-item"><input type="checkbox"/> GraphQL</label>
+        <label class="check-item"><input type="checkbox"/> Celery / Task Queues</label>
+        <label class="check-item"><input type="checkbox"/> Microservices Architecture</label>
+        <label class="check-item"><input type="checkbox"/> WebSockets / Real-time</label>
+        <label class="check-item"><input type="checkbox"/> Authentication (OAuth, JWT)</label>
+        <label class="check-item"><input type="checkbox"/> Payment Gateway Integration</label>
       </div>
     </div>
     <div class="card">
-      <div class="card-title">Design Process</div>
-      <div class="field"><label>Describe your design process</label><textarea placeholder="Walk us through how you approach a new design project..." rows="4"></textarea></div>
-      <div class="field" style="margin-top:14px;"><label>How do you stay updated with design trends?</label><textarea placeholder="e.g. Dribbble, Awwwards, YouTube tutorials, design communities..." rows="3"></textarea></div>
+      <div class="card-title">Frontend Specialisations (select all that apply)</div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox"/> React.js</label>
+        <label class="check-item"><input type="checkbox"/> Next.js</label>
+        <label class="check-item"><input type="checkbox"/> Vue.js</label>
+        <label class="check-item"><input type="checkbox"/> Angular</label>
+        <label class="check-item"><input type="checkbox"/> TypeScript</label>
+        <label class="check-item"><input type="checkbox"/> HTML5 / CSS3</label>
+        <label class="check-item"><input type="checkbox"/> Tailwind CSS</label>
+        <label class="check-item"><input type="checkbox"/> Redux / State Management</label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Engineering Approach</div>
+      <div class="field"><label>Describe a challenging technical problem you solved recently</label><textarea placeholder="Walk us through the problem, your approach, the solution, and what you learned..." rows="4"></textarea></div>
+      <div class="field" style="margin-top:14px;"><label>How do you stay updated with the Python ecosystem and web standards?</label><textarea placeholder="e.g. Python Weekly, Real Python, GitHub trending, open-source contributions, conferences..." rows="3"></textarea></div>
     </div>
     <div class="nav-bar"><button class="btn btn-ghost" onclick="prevStep()">← Back</button><button class="btn btn-primary" onclick="nextStep()">Next →</button></div>
   </section>
 
   <!-- ══ STEP 5 — SOFTWARE ══ -->
   <section class="form-section" id="step-5">
-    <div class="section-title"><div class="section-icon">🖥️</div><div><h2>Software Proficiency</h2><p>Select your level for each tool</p></div></div>
+    <div class="section-title"><div class="section-icon">🖥️</div><div><h2>Technology Proficiency</h2><p>Select your level for each technology</p></div></div>
     <div class="card">
-      <div class="card-title">Design Tools</div>
+      <div class="card-title">Tech Stack Proficiency</div>
       <div style="overflow-x:auto;">
         <table class="proficiency-table">
           <thead><tr><th style="min-width:180px;">Software / Tool</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Expert</th></tr></thead>
@@ -1518,10 +1722,10 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
         </table>
       </div>
       <div class="field" style="margin-top:22px;">
-        <label>Other tools you are comfortable with</label>
+        <label>Other technologies you are comfortable with</label>
         <div class="other-tool-level">
-          <div class="field"><input type="text" id="otherToolsInput" placeholder="e.g. Webflow, Lottie, Notion, Procreate, Blender…" autocomplete="off" list="other-tools-list"/>
-            <datalist id="other-tools-list"><option value="Webflow"/><option value="Lottie"/><option value="Notion"/><option value="Procreate"/><option value="Blender"/><option value="Spline"/><option value="Framer"/><option value="Miro"/><option value="Zeplin"/><option value="ProtoPie"/></datalist></div>
+          <div class="field"><input type="text" id="otherToolsInput" placeholder="e.g. Elasticsearch, RabbitMQ, Terraform, Kubernetes, Nginx…" autocomplete="off" list="other-tools-list"/>
+            <datalist id="other-tools-list"><option value="Elasticsearch"/><option value="RabbitMQ"/><option value="Terraform"/><option value="Kubernetes"/><option value="Nginx"/><option value="MongoDB"/><option value="SQLite"/><option value="Pandas"/><option value="Stripe API"/><option value="Twilio"/></datalist></div>
           <div class="field"><label>Expertise Level</label>
             <select id="otherToolsLevel"><option value="">Select level…</option><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option><option value="Expert">Expert</option></select></div>
         </div>
@@ -1578,7 +1782,7 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
       <div class="card-title">Reference 1</div>
       <div class="field-group cols-2">
         <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="ref1Name" placeholder="Dr. / Mr. / Ms. Full Name" autocomplete="off"/></div>
-        <div class="field"><label>Job Title / Designation <span class="req">*</span></label><input type="text" placeholder="Creative Director"/></div>
+        <div class="field"><label>Job Title / Designation <span class="req">*</span></label><input type="text" placeholder="Engineering Manager / CTO"/></div>
       </div>
       <div class="field-group cols-2">
         <div class="field"><label>Company / Organisation <span class="req">*</span></label><input type="text" placeholder="Company Name"/></div>
@@ -1593,7 +1797,7 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
       <div class="card-title">Reference 2 (Optional)</div>
       <div class="field-group cols-2">
         <div class="field"><label>Full Name</label><input type="text" placeholder="Dr. / Mr. / Ms. Full Name"/></div>
-        <div class="field"><label>Job Title / Designation</label><input type="text" placeholder="Senior Designer"/></div>
+        <div class="field"><label>Job Title / Designation</label><input type="text" placeholder="Senior Developer / Tech Lead"/></div>
       </div>
       <div class="field-group cols-2">
         <div class="field"><label>Company / Organisation</label><input type="text" placeholder="Company Name"/></div>
@@ -1622,9 +1826,9 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     <div class="section-title"><div class="section-icon">✍️</div><div><h2>Cover Letter & Declaration</h2><p>Tell us your story and confirm your details</p></div></div>
     <div class="card">
       <div class="card-title">Cover Letter</div>
-      <p style="font-size:.85rem; color:var(--slate); margin-bottom:16px; line-height:1.7;">Why do you want to join BitByte Technologies? What excites you about working in a startup? What unique value do you bring to our creative team?</p>
+      <p style="font-size:.85rem; color:var(--slate); margin-bottom:16px; line-height:1.7;">Why do you want to join BitByte Technologies? What excites you about building in a fast-moving startup? Describe a technical challenge you are proud of solving and how you approached it.</p>
       <div class="field">
-        <textarea id="coverLetter" placeholder="Dear Hiring Team,&#10;&#10;I am writing to express my interest in the Graphic Designer role at BitByte Technologies..." rows="10" required oninput="updateCharCount(this)"></textarea>
+        <textarea id="coverLetter" placeholder="Dear Hiring Team,&#10;&#10;I am writing to express my interest in the Python Full Stack Developer role at BitByte Technologies..." rows="10" required oninput="updateCharCount(this)"></textarea>
         <div class="char-counter" id="charCounter">0 / 100 min. characters</div>
         <div class="error-msg" id="err-coverLetter">Please write a cover letter (min. 100 characters).</div>
       </div>
@@ -1664,22 +1868,109 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     <!-- PHOTO UPLOAD CARD -->
     <div class="card">
       <div class="card-title">Applicant Photo</div>
-      <p style="font-size:.85rem;color:var(--slate);line-height:1.7;margin-bottom:18px;">Please upload a recent passport-size photograph. This helps our team identify you during interviews and maintains a professional application record.</p>
-      <div class="photo-upload-zone" id="photoZone" onclick="document.getElementById('photoFileInput').click()" ondragover="handlePhotoDragOver(event)" ondragleave="handlePhotoDragLeave(event)" ondrop="handlePhotoDrop(event)">
-        <input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event)"/>
-        <div id="photoPlaceholder">
-          <div class="photo-upload-icon">🖼️</div>
-          <div class="photo-upload-text"><strong>Click to upload</strong> or drag & drop your photo here</div>
-          <div class="photo-upload-hint">JPEG, PNG or WebP · Max 5 MB · Passport size recommended</div>
-        </div>
-        <div class="photo-preview-wrap" id="photoPreviewWrap" style="display:none;">
-          <img id="photoPreviewImg" class="photo-preview-img" src="" alt="Applicant photo" style="display:block;"/>
-          <div style="display:flex;gap:8px;margin-top:8px;">
-            <button class="crop-edit-btn" id="photoReCropBtn" style="display:inline-flex;align-items:center;gap:6px;" onclick="reCropPhoto(event)">✂️ Re-crop</button>
-            <button class="photo-remove-btn" id="photoRemoveBtn" style="display:inline-block;" onclick="removePhoto(event)">✕ Remove Photo</button>
+      <p style="font-size:.85rem;color:var(--slate);line-height:1.7;margin-bottom:18px;">Please provide a recent passport-size photograph. You can upload an existing photo or take a new one directly using your device camera.</p>
+
+      <!-- Photo source tabs -->
+      <div class="photo-src-tabs">
+        <button class="photo-src-tab active" id="photoTabUpload" onclick="switchPhotoTab('upload', this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload Photo
+        </button>
+        <button class="photo-src-tab" id="photoTabCamera" onclick="switchPhotoTab('camera', this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Use Camera
+        </button>
+      </div>
+
+      <!-- UPLOAD PANEL -->
+      <div class="photo-src-panel active" id="photoSrcUpload">
+        <div class="photo-upload-zone" id="photoZone" onclick="document.getElementById('photoFileInput').click()" ondragover="handlePhotoDragOver(event)" ondragleave="handlePhotoDragLeave(event)" ondrop="handlePhotoDrop(event)">
+          <input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/webp" onchange="handlePhotoUpload(event)"/>
+          <div id="photoPlaceholder">
+            <div class="photo-upload-icon">🖼️</div>
+            <div class="photo-upload-text"><strong>Click to upload</strong> or drag & drop your photo here</div>
+            <div class="photo-upload-hint">JPEG, PNG or WebP · Max 5 MB · Passport size recommended</div>
+          </div>
+          <div class="photo-preview-wrap" id="photoPreviewWrap" style="display:none;">
+            <img id="photoPreviewImg" class="photo-preview-img" src="" alt="Applicant photo" style="display:block;"/>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button class="crop-edit-btn" id="photoReCropBtn" style="display:inline-flex;align-items:center;gap:6px;" onclick="reCropPhoto(event)">✂️ Re-crop</button>
+              <button class="photo-remove-btn" id="photoRemoveBtn" style="display:inline-block;" onclick="removePhoto(event)">✕ Remove Photo</button>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- CAMERA PANEL -->
+      <div class="photo-src-panel" id="photoSrcCamera">
+        <div class="cam-wrap" id="camWrap">
+          <!-- IDLE STATE -->
+          <div class="cam-idle" id="camIdle">
+            <div class="cam-idle-icon">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(79,110,247,0.7)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div class="cam-idle-title">Live Camera Capture</div>
+            <div class="cam-idle-hint">Position your face clearly · Use good lighting · Plain background preferred</div>
+            <button class="btn btn-primary" style="margin-top:18px;padding:11px 28px;" onclick="startCamera()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Open Camera
+            </button>
+          </div>
+
+          <!-- LIVE FEED STATE -->
+          <div class="cam-live" id="camLive" style="display:none;">
+            <div class="cam-video-wrap">
+              <video id="camVideo" autoplay playsinline muted></video>
+              <!-- Face guide overlay -->
+              <div class="cam-face-guide">
+                <div class="cam-face-oval"></div>
+                <div class="cam-guide-label">Align your face here</div>
+              </div>
+              <!-- Countdown overlay -->
+              <div class="cam-countdown" id="camCountdown" style="display:none;">
+                <span id="camCountNum">3</span>
+              </div>
+            </div>
+            <div class="cam-controls">
+              <div class="cam-controls-left">
+                <button class="cam-btn cam-btn-secondary" onclick="flipCamera()" id="camFlipBtn" title="Flip camera">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+                </button>
+              </div>
+              <button class="cam-shutter" id="camShutter" onclick="triggerCapture()" title="Capture photo">
+                <span class="cam-shutter-inner"></span>
+              </button>
+              <div class="cam-controls-right">
+                <button class="cam-btn cam-btn-danger" onclick="stopCamera()" title="Stop camera">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="cam-tip">📸 Press the shutter button or <kbd>Space</kbd> to capture</div>
+          </div>
+
+          <!-- PREVIEW STATE (after capture) -->
+          <div class="cam-preview-state" id="camPreviewState" style="display:none;">
+            <div class="cam-preview-frame">
+              <img id="camCapturedImg" src="" alt="Captured photo"/>
+              <div class="cam-preview-badge">✓ Photo Captured</div>
+            </div>
+            <div class="cam-preview-actions">
+              <button class="btn btn-ghost" style="padding:10px 22px;font-size:.83rem;" onclick="retakeCamera()">↩ Retake</button>
+              <button class="btn btn-primary" style="padding:10px 24px;font-size:.83rem;" onclick="useCapturedPhoto()">Use This Photo →</button>
+            </div>
+          </div>
+
+          <!-- CAMERA ERROR STATE -->
+          <div class="cam-error" id="camError" style="display:none;">
+            <div style="font-size:2rem;margin-bottom:12px;">🚫</div>
+            <div class="cam-idle-title" style="color:var(--error);">Camera Access Denied</div>
+            <div class="cam-idle-hint" id="camErrorMsg">Please allow camera permission and try again, or use the Upload tab instead.</div>
+            <button class="btn btn-ghost" style="margin-top:16px;padding:10px 22px;font-size:.82rem;" onclick="retryCamera()">Try Again</button>
+          </div>
+        </div>
+      </div>
+
       <div class="photo-requirements">
         <span class="photo-req-chip">✓ Passport-size</span>
         <span class="photo-req-chip">✓ Plain background</span>
@@ -1770,7 +2061,7 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     <div class="confetti-wrap" id="confettiWrap"></div>
     <div class="success-ring">✓</div>
     <h2>Application Submitted!</h2>
-    <p>Thank you for applying to <strong style="color:var(--white);">BitByte Technologies</strong>.<br/>We have received your application for the <strong style="color:var(--brand-mid);">Graphic Designer</strong> position.<br/>Our team will review it and get back to you within <strong style="color:var(--accent);">7 working days</strong>.</p>
+    <p>Thank you for applying to <strong style="color:var(--white);">BitByte Technologies</strong>.<br/>We have received your application for the <strong style="color:var(--brand-mid);">Python Full Stack Developer</strong> position.<br/>Our team will review it and get back to you within <strong style="color:var(--accent);">7 working days</strong>.</p>
     <div class="ref-box" id="refCode"></div>
     <p style="margin-top:16px; font-size:.8rem; color:var(--slate);">Keep this reference number for your records.</p>
     <button class="btn btn-primary" style="margin-top:28px;" onclick="openPrint()">🖨️ Preview &amp; Save PDF</button>
@@ -1832,10 +2123,11 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
   const totalSteps = 10;
 
   const softwares = [
-    "Adobe Photoshop","Adobe Illustrator","Adobe InDesign",
-    "Figma","Canva","Adobe XD",
-    "Adobe After Effects","Adobe Premiere Pro","CorelDRAW",
-    "Sketch","Procreate","Blender / 3D Tools",
+    "Python 3.x","Django","FastAPI",
+    "Flask","React.js","Next.js",
+    "PostgreSQL","MySQL","Redis",
+    "Docker","AWS / GCP / Azure","Git & GitHub",
+    "CI/CD Pipelines","REST API Design","GraphQL",
   ];
 
   /* ═══════════════════════════════ INIT ═══════════════════════════════ */
@@ -1957,11 +2249,11 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     const row = document.createElement('div'); row.className = 'repeat-row';
     row.innerHTML = `<button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
       <div class="field-group cols-2">
-        <div class="field"><label>Degree / Qualification</label><input type="text" placeholder="e.g. B.Des" autocomplete="off" list="degree-list"/></div>
+        <div class="field"><label>Degree / Qualification</label><input type="text" placeholder="e.g. B.Tech in Computer Science" autocomplete="off" list="degree-list"/></div>
         <div class="field"><label>Institution / University</label><input type="text" placeholder="University Name" autocomplete="organization" list="institution-list"/></div>
       </div>
       <div class="field-group cols-3">
-        <div class="field"><label>Department</label><input type="text" placeholder="Graphic Design" autocomplete="off" list="dept-suggestions"/></div>
+        <div class="field"><label>Department</label><input type="text" placeholder="Computer Science" autocomplete="off" list="dept-suggestions"/></div>
         <div class="field"><label>Year of Passing</label><input type="text" placeholder="2023" autocomplete="off" list="year-suggestions"/></div>
         <div class="field"><label>Grade / CGPA</label><input type="text" placeholder="8.5" autocomplete="off"/></div>
       </div>`;
@@ -1972,8 +2264,8 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     const row = document.createElement('div'); row.className = 'repeat-row';
     row.innerHTML = `<button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
       <div class="field-group cols-3">
-        <div class="field"><label>Course Name</label><input type="text" placeholder="UI/UX Bootcamp" autocomplete="off" list="cert-list"/></div>
-        <div class="field"><label>Platform</label><input type="text" placeholder="Coursera" autocomplete="off" list="platform-list"/></div>
+        <div class="field"><label>Course Name</label><input type="text" placeholder="AWS Certified Developer" autocomplete="off" list="cert-list"/></div>
+        <div class="field"><label>Platform</label><input type="text" placeholder="Coursera / AWS" autocomplete="off" list="platform-list"/></div>
         <div class="field"><label>Year</label><input type="text" placeholder="2024" autocomplete="off" list="year-suggestions"/></div>
       </div>`;
     document.getElementById('cert-rows').appendChild(row);
@@ -2558,9 +2850,9 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
     const expRows = getRepeatRows('exp-rows', ['company','title','from','to','responsibilities']);
     const totalExp = getSelectValue('totalExp'), startup = getChecked('startup'), sigProject = val('sigProject');
     const portLinks = document.querySelectorAll('#step-4 input[type="url"]');
-    const port1 = portLinks[0]?.value.trim()||'', port2 = portLinks[1]?.value.trim()||'';
-    const specialisationItems = getCheckboxesFromSection('step-4').slice(0, 12);
-    const styleItems = getCheckboxesFromSection('step-4').slice(12, 20);
+    const port1 = portLinks[0]?.value.trim()||'', port2 = portLinks[1]?.value.trim()||'', port3 = portLinks[2]?.value.trim()||'';
+    const backendItems = getCheckboxesFromSection('step-4').slice(0, 10);
+    const frontendItems = getCheckboxesFromSection('step-4').slice(10, 18);
     const portfolioTAs = document.querySelectorAll('#step-4 textarea');
     const designProcess = portfolioTAs[0]?.value.trim()||'', trendUpdate = portfolioTAs[1]?.value.trim()||'';
     const softwareData = softwares.map((sw, i) => { const c = document.querySelector(`input[name="sw_${i}"]:checked`); return { name: sw, level: c ? c.value : '' }; });
@@ -2591,12 +2883,12 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
         <div class="pd-header-top">
           <div class="pd-logo">
             <div class="pd-logo-icon">${chipSVG}</div>
-            <div><div class="pd-logo-name">BitByte<span style="color:rgba(255,255,255,.6)">.</span>Technologies</div><div class="pd-logo-sub">Creative & Innovation Team</div></div>
+            <div><div class="pd-logo-name">BitByte<span style="color:rgba(255,255,255,.6)">.</span>Technologies</div><div class="pd-logo-sub">Engineering & Product</div></div>
           </div>
           <div class="pd-ref">REF: ${refCode} &nbsp;|&nbsp; ${printDate}</div>
         </div>
-        <div class="pd-title">Graphic Designer — Application</div>
-        <div class="pd-subtitle">Full-Time Position &nbsp;·&nbsp; On-site / Hybrid</div>
+        <div class="pd-title">Python Full Stack Developer — Application</div>
+        <div class="pd-subtitle">Full-Time Position &nbsp;·&nbsp; Work from Office / Hybrid</div>
       </div>
       <div class="pd-body">
         <div class="pd-section"><div class="pd-section-title">A. Personal Information</div>
@@ -2621,17 +2913,17 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
           <table class="pd-table"><thead><tr><th>Company</th><th>Job Title</th><th>From</th><th>To</th><th>Key Responsibilities</th></tr></thead>
           <tbody>${expTableRows||'<tr><td colspan="5" style="color:#aaa;font-style:italic;">No entries</td></tr>'}</tbody></table>
           <div class="pd-grid g2">${field('Total Years of Experience', totalExp)}${field('Worked in Startup Before?', startup)}</div>
-          ${field('Most Significant Design Project', sigProject, true)}
+          ${field('Most Significant Technical Project', sigProject, true)}
         </div>
         <div class="pd-divider"></div>
-        <div class="pd-section"><div class="pd-section-title">D. Portfolio & Design Skills</div>
-          <div class="pd-grid g2">${field('Primary Portfolio URL', port1)}${field('Secondary Portfolio URL', port2)}</div>
-          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">Design Specialisations</div>${chipRow(specialisationItems)}
-          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">Design Style Strengths</div>${chipRow(styleItems)}
-          ${field('Design Process', designProcess, true)}${field('How You Stay Updated', trendUpdate, true)}
+        <div class="pd-section"><div class="pd-section-title">D. Technical Skills & Projects</div>
+          <div class="pd-grid g3">${field('GitHub Profile', port1)}${field('Portfolio / Website', port2)}${field('Notable Repo', port3)}</div>
+          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">Backend Specialisations</div>${chipRow(backendItems)}
+          <div class="pd-label" style="margin-bottom:6px;margin-top:10px;">Frontend Specialisations</div>${chipRow(frontendItems)}
+          ${field('Technical Challenge Description', designProcess, true)}${field('How You Stay Updated', trendUpdate, true)}
         </div>
         <div class="pd-divider"></div>
-        <div class="pd-section"><div class="pd-section-title">E. Software Proficiency</div>
+        <div class="pd-section"><div class="pd-section-title">E. Technology Proficiency</div>
           <table class="pd-soft-table"><thead><tr><th style="min-width:140px;">Software / Tool</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Expert</th></tr></thead>
           <tbody>${softRows}</tbody></table>
           ${field('Other Tools', otherTools ? `${otherTools}${otherToolsLevel ? ' — ' + otherToolsLevel : ''}` : '')}
@@ -2683,17 +2975,209 @@ body.light-mode .sig-stroke-btn.active { background: rgba(79,110,247,.15); color
         </div>
       </div>
       <div class="pd-footer">
-        <div><div style="font-weight:800;color:#222;font-size:.82rem;">BitByte Technologies — Confidential</div><div>Graphic Designer Application &nbsp;·&nbsp; ${printDate}</div></div>
+        <div><div style="font-weight:800;color:#222;font-size:.82rem;">BitByte Technologies — Confidential</div><div>Python Full Stack Developer Application &nbsp;·&nbsp; ${printDate}</div></div>
         <div class="pd-footer-sig">${(()=>{ const s=getSigDataURL(); return s ? `<img src="${s}" style="max-height:48px;max-width:180px;display:block;margin-bottom:4px;" alt="Signature"/>` : (sigName ? escHtml(sigName) : '___________________________'); })()}<br/><span style="font-size:.7rem;font-weight:500;color:#888;">Applicant Signature</span></div>
       </div>`;
   }
 
-  function openPrint() { document.getElementById('printDocInner').innerHTML = buildPrintDoc(); document.getElementById('printOverlay').classList.add('show'); document.getElementById('printOverlay').scrollTop = 0; }
+  /* ═══════════════════════════════════════════════════════════════
+     PHOTO SOURCE TAB SWITCHER
+  ═══════════════════════════════════════════════════════════════ */
+  function switchPhotoTab(tab, btn) {
+    document.querySelectorAll('.photo-src-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.photo-src-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('photoSrc' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    if (tab !== 'camera') stopCamera();
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     CAMERA ENGINE
+  ═══════════════════════════════════════════════════════════════ */
+  const _cam = {
+    stream: null,
+    facingMode: 'user',   // 'user' = front, 'environment' = rear
+    countTimer: null,
+    capturedDataURL: null,
+  };
+
+  async function startCamera() {
+    const idle  = document.getElementById('camIdle');
+    const live  = document.getElementById('camLive');
+    const error = document.getElementById('camError');
+    const video = document.getElementById('camVideo');
+    const flipBtn = document.getElementById('camFlipBtn');
+
+    idle.style.display = 'none';
+    error.style.display = 'none';
+
+    // Check if device has multiple cameras (show/hide flip button)
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const cams = devices.filter(d => d.kind === 'videoinput');
+      flipBtn.style.display = cams.length > 1 ? 'flex' : 'none';
+    } catch(e) { flipBtn.style.display = 'none'; }
+
+    try {
+      if (_cam.stream) { _cam.stream.getTracks().forEach(t => t.stop()); }
+      _cam.stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: _cam.facingMode, width: { ideal: 1280 }, height: { ideal: 960 } },
+        audio: false
+      });
+      video.srcObject = _cam.stream;
+      live.style.display = 'flex';
+      // Keyboard shortcut
+      document.addEventListener('keydown', _camKeyHandler);
+    } catch(err) {
+      _cam.stream = null;
+      idle.style.display = 'flex';
+      error.style.display = 'flex';
+      document.getElementById('camErrorMsg').textContent =
+        err.name === 'NotAllowedError'
+          ? 'Camera permission was denied. Please allow access in your browser settings and try again.'
+          : 'Could not access camera: ' + err.message + '. Try the Upload tab instead.';
+    }
+  }
+
+  function stopCamera() {
+    if (_cam.stream) {
+      _cam.stream.getTracks().forEach(t => t.stop());
+      _cam.stream = null;
+    }
+    clearCountdown();
+    document.removeEventListener('keydown', _camKeyHandler);
+    const live    = document.getElementById('camLive');
+    const preview = document.getElementById('camPreviewState');
+    const idle    = document.getElementById('camIdle');
+    if (live) live.style.display = 'none';
+    if (preview) preview.style.display = 'none';
+    if (idle) idle.style.display = 'flex';
+    const countdown = document.getElementById('camCountdown');
+    if (countdown) countdown.style.display = 'none';
+  }
+
+  async function flipCamera() {
+    _cam.facingMode = _cam.facingMode === 'user' ? 'environment' : 'user';
+    const video = document.getElementById('camVideo');
+    // Mirror only for front camera
+    video.style.transform = _cam.facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
+    if (_cam.stream) { _cam.stream.getTracks().forEach(t => t.stop()); }
+    try {
+      _cam.stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: _cam.facingMode, width: { ideal: 1280 }, height: { ideal: 960 } },
+        audio: false
+      });
+      video.srcObject = _cam.stream;
+    } catch(e) { console.warn('Camera flip failed:', e); }
+  }
+
+  function _camKeyHandler(e) {
+    if (e.code === 'Space' && !e.repeat) {
+      const liveVisible = document.getElementById('camLive')?.style.display !== 'none';
+      if (liveVisible) { e.preventDefault(); triggerCapture(); }
+    }
+  }
+
+  function clearCountdown() {
+    if (_cam.countTimer) { clearInterval(_cam.countTimer); _cam.countTimer = null; }
+  }
+
+  function triggerCapture() {
+    const shutter  = document.getElementById('camShutter');
+    const countdown = document.getElementById('camCountdown');
+    const countNum  = document.getElementById('camCountNum');
+    if (!_cam.stream) return;
+    // Disable button during countdown
+    if (shutter) shutter.disabled = true;
+    clearCountdown();
+    let count = 3;
+    countNum.textContent = count;
+    countdown.style.display = 'flex';
+    // force reflow to restart animation each tick
+    const animTick = () => { countNum.style.animation = 'none'; void countNum.offsetWidth; countNum.style.animation = 'countPop .4s cubic-bezier(.34,1.56,.64,1) both'; };
+    animTick();
+    _cam.countTimer = setInterval(() => {
+      count--;
+      if (count <= 0) {
+        clearCountdown();
+        countdown.style.display = 'none';
+        if (shutter) shutter.disabled = false;
+        captureFrame();
+      } else {
+        countNum.textContent = count;
+        animTick();
+      }
+    }, 1000);
+  }
+
+  function captureFrame() {
+    const video = document.getElementById('camVideo');
+    if (!video || !_cam.stream) return;
+    // Flash effect
+    const videoWrap = document.querySelector('.cam-video-wrap');
+    const flash = document.createElement('div');
+    flash.className = 'cam-flash';
+    videoWrap.appendChild(flash);
+    setTimeout(() => flash.remove(), 400);
+    // Draw to canvas
+    const canvas = document.createElement('canvas');
+    canvas.width  = video.videoWidth  || 640;
+    canvas.height = video.videoHeight || 480;
+    const ctx = canvas.getContext('2d');
+    // Mirror front camera output
+    if (_cam.facingMode === 'user') {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    _cam.capturedDataURL = canvas.toDataURL('image/jpeg', 0.92);
+    // Stop stream to release camera
+    stopCamera();
+    // Show preview
+    document.getElementById('camIdle').style.display = 'none';
+    const previewState = document.getElementById('camPreviewState');
+    document.getElementById('camCapturedImg').src = _cam.capturedDataURL;
+    previewState.style.display = 'flex';
+  }
+
+  function retakeCamera() {
+    _cam.capturedDataURL = null;
+    document.getElementById('camPreviewState').style.display = 'none';
+    startCamera();
+  }
+
+  function retryCamera() {
+    document.getElementById('camError').style.display = 'none';
+    startCamera();
+  }
+
+  function useCapturedPhoto() {
+    if (!_cam.capturedDataURL) return;
+    // Feed into the crop engine just like a file upload
+    openCropModal(_cam.capturedDataURL);
+    // Switch back to upload tab so preview shows in the right panel after crop
+    const uploadTab = document.getElementById('photoTabUpload');
+    if (uploadTab) switchPhotoTab('upload', uploadTab);
+  }
+
+  // Stop camera whenever user navigates away from step 9
+  const _goToStepOrig = goToStep;
+  goToStep = function(n) {
+    if (n !== 9) stopCamera();
+    _goToStepOrig(n);
+  };
+
+  /* ═══════════════════════════════ PRINT PREVIEW ═══════════════════════════════ */
+  function openPrint() {
+    document.getElementById('printDocInner').innerHTML = buildPrintDoc();
+    document.getElementById('printOverlay').classList.add('show');
+    document.getElementById('printOverlay').scrollTop = 0;
+  }
   function closePrint() { document.getElementById('printOverlay').classList.remove('show'); }
 
   function doPrint() {
     const innerHtml = buildPrintDoc();
-    const fullPage = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>BitByte Technologies — Graphic Designer Application</title>
+    const fullPage = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>BitByte Technologies — Python Full Stack Developer Application</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
